@@ -371,7 +371,7 @@ void PAK_FinishLump(void) {
     int len = (int)ftell(w_pak_fp) - (int)w_pak_entry.offset;
 
     // pad lumps to a multiple of four bytes
-    int padding = ALIGN_LEN(len) - len;
+    int padding = util::ALIGN_LEN(len) - len;
 
     if (padding > 0) {
         static u8_t zeros[4] = {0, 0, 0, 0};

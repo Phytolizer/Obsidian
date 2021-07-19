@@ -343,7 +343,7 @@ void WAD_FinishLump(void) {
     int len = (int)ftell(wad_W_fp) - (int)wad_W_lump.start;
 
     // pad lumps to a multiple of four bytes
-    int padding = ALIGN_LEN(len) - len;
+    int padding = util::ALIGN_LEN(len) - len;
 
     if (padding > 0) {
         static u8_t zeros[4] = {0, 0, 0, 0};
@@ -695,7 +695,7 @@ void WAD2_FinishLump(void) {
     int len = (int)ftell(wad2_W_fp) - (int)wad2_W_lump.start;
 
     // pad lumps to a multiple of four bytes
-    int padding = ALIGN_LEN(len) - len;
+    int padding = util::ALIGN_LEN(len) - len;
 
     if (padding > 0) {
         static u8_t zeros[4] = {0, 0, 0, 0};

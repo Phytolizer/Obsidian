@@ -536,7 +536,7 @@ static void BSP_WriteLump(qLump_c *lump) {
     PAK_AppendData(lump->GetBuffer(), len);
 
     // pad lumps to a multiple of four bytes
-    u32_t padding = ALIGN_LEN(len) - len;
+    u32_t padding = util::ALIGN_LEN(len) - len;
 
     SYS_ASSERT(0 <= padding && padding <= 3);
 
@@ -636,7 +636,7 @@ static void BSP_WriteHeader() {
         } else {
             PAK_AppendData(&raw_info, sizeof(raw_info));
 
-            offset += (u32_t)ALIGN_LEN(length);
+            offset += (u32_t)util::ALIGN_LEN(length);
         }
     }
 }
