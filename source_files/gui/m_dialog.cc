@@ -284,7 +284,7 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
     FilenameGetPath(dir_name, sizeof(dir_name), src_name);
 
     if (strlen(dir_name) > 0) {
-        last_directory = StringDup(dir_name);
+        last_directory = util::StringDup(dir_name);
     }
 
     // add extension if missing
@@ -304,7 +304,7 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
         }
     }
 
-    return StringDup(filename);
+    return util::StringDup(filename);
 }
 
 //----------------------------------------------------------------------cout
@@ -500,7 +500,7 @@ int UI_LogViewer::CountSelectedLines() const {
 }
 
 char *UI_LogViewer::GetSelectedText() const {
-    char *buf = StringDup("");
+    char *buf = util::StringDup("");
 
     for (int i = 1; i <= browser->size(); i++) {
         if (!browser->selected(i)) {
@@ -516,7 +516,7 @@ char *UI_LogViewer::GetSelectedText() const {
 
         int new_len = (int)strlen(buf) + (int)strlen(line_text);
 
-        char *new_buf = StringNew(new_len + 1 /* newline */);
+        char *new_buf = util::StringNew(new_len + 1 /* newline */);
 
         strcpy(new_buf, buf);
         strcat(new_buf, line_text);
@@ -526,7 +526,7 @@ char *UI_LogViewer::GetSelectedText() const {
             new_buf[new_len] = 0;
         }
 
-        StringFree(buf);
+        util::StringFree(buf);
 
         buf = new_buf;
     }
@@ -582,7 +582,7 @@ void UI_LogViewer::copy_callback(Fl_Widget *w, void *data) {
         Fl::copy(text, (int)strlen(text), 1);
     }
 
-    StringFree(text);
+    util::StringFree(text);
 }
 
 void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {

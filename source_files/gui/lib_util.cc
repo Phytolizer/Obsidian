@@ -28,7 +28,7 @@
 #include <unistd.h>  // usleep()
 #endif
 
-int StringCaseCmp(const char *A, const char *B) {
+int util::StringCaseCmp(const char *A, const char *B) {
     for (; *A || *B; A++, B++) {
         // this test also catches end-of-string conditions
         if (toupper(*A) != toupper(*B)) {
@@ -39,7 +39,7 @@ int StringCaseCmp(const char *A, const char *B) {
     return 0;
 }
 
-int StringCaseCmpPartial(const char *A, const char *B) {
+int util::StringCaseCmpPartial(const char *A, const char *B) {
     // Checks that the string B occurs at the front of string A.
     // NOTE: This function is not symmetric, A can be longer than B and
     // still match, but the match always fails if A is shorter than B.
@@ -62,8 +62,8 @@ void StringMaxCopy(char *dest, const char *src, int max) {
     *dest = 0;
 }
 
-char *StringUpper(const char *name) {
-    char *copy = StringDup(name);
+char *util::StringUpper(const char *name) {
+    char *copy = util::StringDup(name);
 
     for (char *p = copy; *p; p++) {
         *p = toupper(*p);
@@ -72,7 +72,7 @@ char *StringUpper(const char *name) {
     return copy;
 }
 
-char *StringNew(int length) {
+char *util::StringNew(int length) {
     // length does not include the trailing NUL.
 
     char *s = (char *)calloc(length + 1, 1);
@@ -84,7 +84,7 @@ char *StringNew(int length) {
     return s;
 }
 
-char *StringDup(const char *orig, int limit) {
+char *util::StringDup(const char *orig, int limit) {
     if (!orig) {
         orig = "(null)";
     }
@@ -99,14 +99,14 @@ char *StringDup(const char *orig, int limit) {
         return s;
     }
 
-    char *s = StringNew(limit + 1);
+    char *s = util::StringNew(limit + 1);
     strncpy(s, orig, limit);
     s[limit] = 0;
 
     return s;
 }
 
-char *StringPrintf(const char *str, ...) {
+char *util::StringPrintf(const char *str, ...) {
     /* Algorithm: keep doubling the allocated buffer size
      * until the output fits. Based on code by Darren Salt.
      */
@@ -138,13 +138,13 @@ char *StringPrintf(const char *str, ...) {
     }
 }
 
-void StringFree(const char *str) {
+void util::StringFree(const char *str) {
     if (str) {
         free((void *)str);
     }
 }
 
-void StringRemoveCRLF(char *str) {
+void util::StringRemoveCRLF(char *str) {
     size_t len = strlen(str);
 
     if (len > 0 && str[len - 1] == '\n') {
@@ -156,7 +156,7 @@ void StringRemoveCRLF(char *str) {
     }
 }
 
-void StringReplaceChar(char *str, char old_ch, char new_ch) {
+void util::StringReplaceChar(char *str, char old_ch, char new_ch) {
     // when 'new_ch' is zero, the character is simply removed
 
     SYS_ASSERT(old_ch != 0);
@@ -178,7 +178,7 @@ void StringReplaceChar(char *str, char old_ch, char new_ch) {
     *dest = 0;
 }
 
-char *mem_gets(char *buf, int size, const char **str_ptr) {
+char *util::mem_gets(char *buf, int size, const char **str_ptr) {
     // This is like fgets() but reads lines from a string.
     // The pointer at 'str_ptr' will point to the next line
     // after this call (or the trailing NUL).
@@ -217,7 +217,7 @@ char *mem_gets(char *buf, int size, const char **str_ptr) {
 //------------------------------------------------------------------------
 
 /* Thomas Wang's 32-bit Mix function */
-u32_t IntHash(u32_t key) {
+u32_t util::IntHash(u32_t key) {
     key += ~(key << 15);
     key ^= (key >> 10);
     key += (key << 3);
@@ -228,7 +228,7 @@ u32_t IntHash(u32_t key) {
     return key;
 }
 
-u32_t StringHash(const char *str) {
+u32_t util::StringHash(const char *str) {
     u32_t hash = 0;
 
     if (str) {
@@ -240,7 +240,7 @@ u32_t StringHash(const char *str) {
     return hash;
 }
 
-double PerpDist(double x, double y, double x1, double y1, double x2,
+double util::PerpDist(double x, double y, double x1, double y1, double x2,
                 double y2) {
     x -= x1;
     y -= y1;
@@ -254,7 +254,7 @@ double PerpDist(double x, double y, double x1, double y1, double x2,
     return (x * y2 - y * x2) / len;
 }
 
-double AlongDist(double x, double y, double x1, double y1, double x2,
+double util::AlongDist(double x, double y, double x1, double y1, double x2,
                  double y2) {
     x -= x1;
     y -= y1;
@@ -268,7 +268,7 @@ double AlongDist(double x, double y, double x1, double y1, double x2,
     return (x * x2 + y * y2) / len;
 }
 
-double CalcAngle(double sx, double sy, double ex, double ey) {
+double util::CalcAngle(double sx, double sy, double ex, double ey) {
     // result is Degrees (0 <= angle < 360).
     // East  (increasing X) -->  0 degrees
     // North (increasing Y) --> 90 degrees
@@ -293,7 +293,7 @@ double CalcAngle(double sx, double sy, double ex, double ey) {
     return angle;
 }
 
-double DiffAngle(double A, double B) {
+double util::DiffAngle(double A, double B) {
     // A + result = B
     // result ranges from -180 to +180
 
@@ -309,17 +309,17 @@ double DiffAngle(double A, double B) {
     return D;
 }
 
-double ComputeDist(double sx, double sy, double ex, double ey) {
+double util::ComputeDist(double sx, double sy, double ex, double ey) {
     return sqrt((ex - sx) * (ex - sx) + (ey - sy) * (ey - sy));
 }
 
-double ComputeDist(double sx, double sy, double sz, double ex, double ey,
+double util::ComputeDist(double sx, double sy, double sz, double ex, double ey,
                    double ez) {
     return sqrt((ex - sx) * (ex - sx) + (ey - sy) * (ey - sy) +
                 (ez - sz) * (ez - sz));
 }
 
-double PointLineDist(double x, double y, double x1, double y1, double x2,
+double util::PointLineDist(double x, double y, double x1, double y1, double x2,
                      double y2) {
     x -= x1;
     y -= y1;
@@ -341,7 +341,7 @@ double PointLineDist(double x, double y, double x1, double y1, double x2,
         return sqrt(x * x + y * y);
 
     } else if (along_frac >= 1) {
-        return ComputeDist(x, y, x2, y2);
+        return util::ComputeDist(x, y, x2, y2);
 
     } else {
         // perp dist
@@ -349,13 +349,13 @@ double PointLineDist(double x, double y, double x1, double y1, double x2,
     }
 }
 
-void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
+void util::CalcIntersection(double nx1, double ny1, double nx2, double ny2,
                       double px1, double py1, double px2, double py2, double *x,
                       double *y) {
     // NOTE: lines are extended to infinity to find the intersection
 
-    double a = PerpDist(nx1, ny1, px1, py1, px2, py2);
-    double b = PerpDist(nx2, ny2, px1, py1, px2, py2);
+    double a = util::PerpDist(nx1, ny1, px1, py1, px2, py2);
+    double b = util::PerpDist(nx2, ny2, px1, py1, px2, py2);
 
     // BIG ASSUMPTION: lines are not parallel or colinear
     SYS_ASSERT(fabs(a - b) > 1e-6);
@@ -367,21 +367,21 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
     *y = ny1 + along * (ny2 - ny1);
 }
 
-void AlongCoord(double along, double px1, double py1, double px2, double py2,
+void util::AlongCoord(double along, double px1, double py1, double px2, double py2,
                 double *x, double *y) {
-    double len = ComputeDist(px1, py1, px2, py2);
+    double len = util::ComputeDist(px1, py1, px2, py2);
 
     *x = px1 + along * (px2 - px1) / len;
     *y = py1 + along * (py2 - py1) / len;
 }
 
-bool VectorSameDir(double dx1, double dy1, double dx2, double dy2) {
+bool util::VectorSameDir(double dx1, double dy1, double dx2, double dy2) {
     return (dx1 * dx2 + dy1 * dy2) >= 0;
 }
 
 //------------------------------------------------------------------------
 
-u32_t TimeGetMillies() {
+u32_t util::TimeGetMillies() {
     // Note: you *MUST* handle overflow (it *WILL* happen)
 
 #ifdef WIN32
@@ -398,7 +398,7 @@ u32_t TimeGetMillies() {
 #endif
 }
 
-void TimeDelay(u32_t millies) {
+void util::TimeDelay(u32_t millies) {
 #ifdef WIN32
     ::Sleep(millies);
 

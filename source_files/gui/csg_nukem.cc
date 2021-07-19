@@ -406,7 +406,7 @@ static void LightingFloodFill(void)
 
 				SYS_ASSERT(B != F);
 
-				double dist = ComputeDist(F->mid_x,F->mid_y, B->mid_x,B->mid_y);
+				double dist = util::ComputeDist(F->mid_x,F->mid_y, B->mid_x,B->mid_y);
 
 				double A = log(light) / log(2);
 				double L2 = pow(2, A - dist / light_dist_factor);

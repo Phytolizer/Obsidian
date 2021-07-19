@@ -95,7 +95,7 @@ UI_About::UI_About(int W, int H, const char *label)
 
     // nice big logo text
     const char *logo_text =
-        StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
+        util::StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP | FL_ALIGN_CLIP);

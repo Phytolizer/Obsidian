@@ -179,7 +179,7 @@ int PAK_NumEntries(void) { return (int)r_header.entry_num; }
 
 int PAK_FindEntry(const char *name) {
     for (unsigned int i = 0; i < r_header.entry_num; i++) {
-        if (StringCaseCmp(name, r_directory[i].name) == 0) {
+        if (util::StringCaseCmp(name, r_directory[i].name) == 0) {
             return i;
         }
     }

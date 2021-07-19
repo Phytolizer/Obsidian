@@ -27,19 +27,19 @@
 choice_data_c::choice_data_c(const char *_id, const char *_label)
     : id(NULL), label(NULL), enabled(false), mapped(-1), widget(NULL) {
     if (_id) {
-        id = StringDup(_id);
+        id = util::StringDup(_id);
     }
     if (_label) {
-        label = StringDup(_label);
+        label = util::StringDup(_label);
     }
 }
 
 choice_data_c::~choice_data_c() {
     if (id) {
-        StringFree(id);
+        util::StringFree(id);
     }
     if (label) {
-        StringFree(label);
+        util::StringFree(label);
     }
 
     // ignore 'widget' field when enabled, we assume it exists in
@@ -64,8 +64,8 @@ void UI_RChoiceMenu::AddChoice(const char *id, const char *label) {
     choice_data_c *opt = FindID(id);
 
     if (opt) {
-        StringFree(opt->label);
-        opt->label = StringDup(label);
+        util::StringFree(opt->label);
+        opt->label = util::StringDup(label);
 
         if (opt->enabled) {
             Recreate();

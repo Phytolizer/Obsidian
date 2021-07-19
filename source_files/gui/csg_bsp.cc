@@ -138,7 +138,7 @@ snag_c::snag_c(const snag_c &other)
 
 snag_c::~snag_c() {}
 
-double snag_c::Length() const { return ComputeDist(x1, y1, x2, y2); }
+double snag_c::Length() const { return util::ComputeDist(x1, y1, x2, y2); }
 
 snag_c *snag_c::Cut(double ix, double iy) {
     snag_c *T = new snag_c(*this);
@@ -154,10 +154,10 @@ snag_c *snag_c::Cut(double ix, double iy) {
 void snag_c::CalcAlongs() {
     SYS_ASSERT(on_node);
 
-    double a1 =
-        AlongDist(x1, y1, on_node->x1, on_node->y1, on_node->x2, on_node->y2);
-    double a2 =
-        AlongDist(x2, y2, on_node->x1, on_node->y1, on_node->x2, on_node->y2);
+    double a1 = util::AlongDist(x1, y1, on_node->x1, on_node->y1, on_node->x2,
+                                on_node->y2);
+    double a2 = util::AlongDist(x2, y2, on_node->x1, on_node->y1, on_node->x2,
+                                on_node->y2);
 
     a1 /= SNAG_EPSILON;
     a2 /= SNAG_EPSILON;
@@ -415,7 +415,7 @@ bool region_c::ContainsPoint(double x, double y) const {
     for (unsigned int i = 0; i < snags.size(); i++) {
         const snag_c *S = snags[i];
 
-        double d = PerpDist(x, y, S->x1, S->y1, S->x2, S->y2);
+        double d = util::PerpDist(x, y, S->x1, S->y1, S->x2, S->y2);
 
         if (d < -SNAG_EPSILON) {
             return false;
@@ -435,7 +435,7 @@ double region_c::DistanceToPoint(float x, float y) const {
     for (unsigned int i = 0; i < snags.size(); i++) {
         const snag_c *S = snags[i];
 
-        double dist = PointLineDist(x, y, S->x1, S->y1, S->x2, S->y2);
+        double dist = util::PointLineDist(x, y, S->x1, S->y1, S->x2, S->y2);
 
         best = MIN(best, dist);
     }
@@ -490,7 +490,7 @@ void region_c::ClockwiseSnags() {
     for (i = 0; i < total; i++) {
         snag_c *S = snags[i];
 
-        angles[i] = CalcAngle(mid_x, mid_y, S->x1, S->y1);
+        angles[i] = util::CalcAngle(mid_x, mid_y, S->x1, S->y1);
     }
 
     i = 0;
@@ -655,13 +655,13 @@ static void QuantizeVert(const brush_vert_c *V, int *qx, int *qy) {
 
 static bool OnSameLine(double x1, double y1, double x2, double y2,
                        const snag_c *S, double DIST) {
-    double d1 = PerpDist(S->x1, S->y1, x1, y1, x2, y2);
+    double d1 = util::PerpDist(S->x1, S->y1, x1, y1, x2, y2);
 
     if (fabs(d1) > DIST) {
         return false;
     }
 
-    double d2 = PerpDist(S->x2, S->y2, x1, y1, x2, y2);
+    double d2 = util::PerpDist(S->x2, S->y2, x1, y1, x2, y2);
 
     if (fabs(d2) > DIST) {
         return false;
@@ -795,9 +795,9 @@ static void CreateRegion(group_c &root, csg_brush_c *P) {
 #if 0
 static void MoveOntoLine(partition_c *part, double *x, double *y)
 {
-	double along = AlongDist(*x, *y, part->x1,part->y1, part->x2,part->y2);
+	double along = util::AlongDist(*x, *y, part->x1,part->y1, part->x2,part->y2);
 
-	AlongCoord(along, part->x1,part->y1, part->x2,part->y2, x, y);
+	util::AlongCoord(along, part->x1,part->y1, part->x2,part->y2, x, y);
 }
 #endif
 
@@ -810,10 +810,10 @@ int region_c::TestSide(partition_c *part) {
     for (unsigned int i = 0; i < snags.size(); i++) {
         snag_c *S = snags[i];
 
-        double a =
-            PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
-        double b =
-            PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
+        double a = util::PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2,
+                                  part->y2);
+        double b = util::PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2,
+                                  part->y2);
 
         int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
         int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
@@ -847,8 +847,10 @@ static void DivideOneSnag(snag_c *S, partition_c *part, region_c *front,
                           region_c *back, double *along_min,
                           double *along_max) {
     // get relationship of lines to each other
-    double a = PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
-    double b = PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
+    double a =
+        util::PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
+    double b =
+        util::PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
 
     int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
     int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
@@ -861,8 +863,8 @@ static void DivideOneSnag(snag_c *S, partition_c *part, region_c *front,
     if (a_side == 0 && b_side == 0) {
         // this snag runs along the same line as the partition.
         // check whether it goes in the same direction or the opposite.
-        if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
-                          S->x2 - S->x1, S->y2 - S->y1)) {
+        if (util::VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
+                                S->x2 - S->x1, S->y2 - S->y1)) {
             front->AddSnag(S);
         } else {
             back->AddSnag(S);
@@ -875,11 +877,11 @@ static void DivideOneSnag(snag_c *S, partition_c *part, region_c *front,
     if (a_side != b_side) {
         double ix, iy;
 
-        CalcIntersection(S->x1, S->y1, S->x2, S->y2, part->x1, part->y1,
-                         part->x2, part->y2, &ix, &iy);
+        util::CalcIntersection(S->x1, S->y1, S->x2, S->y2, part->x1, part->y1,
+                               part->x2, part->y2, &ix, &iy);
 
         double along =
-            AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
+            util::AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
 
         *along_min = MIN(*along_min, along);
         *along_max = MAX(*along_max, along);
@@ -904,8 +906,8 @@ static void DivideOneSnag(snag_c *S, partition_c *part, region_c *front,
 
     double ix, iy;
 
-    CalcIntersection(S->x1, S->y1, S->x2, S->y2, part->x1, part->y1, part->x2,
-                     part->y2, &ix, &iy);
+    util::CalcIntersection(S->x1, S->y1, S->x2, S->y2, part->x1, part->y1,
+                           part->x2, part->y2, &ix, &iy);
 
     snag_c *T = S->Cut(ix, iy);
 
@@ -965,8 +967,10 @@ static void DivideOneRegion(region_c *R, partition_c *part, group_c &front,
         double x1, y1;
         double x2, y2;
 
-        AlongCoord(along_min, part->x1, part->y1, part->x2, part->y2, &x1, &y1);
-        AlongCoord(along_max, part->x1, part->y1, part->x2, part->y2, &x2, &y2);
+        util::AlongCoord(along_min, part->x1, part->y1, part->x2, part->y2, &x1,
+                         &y1);
+        util::AlongCoord(along_max, part->x1, part->y1, part->x2, part->y2, &x2,
+                         &y2);
 
         R->AddSnag(new snag_c(x1, y1, x2, y2, part));
         N->AddSnag(new snag_c(x2, y2, x1, y1, part));
@@ -1103,7 +1107,8 @@ static partition_c *ChoosePartition(group_c &group, bool *reached_chunk) {
 
 static void DivideOneEntity(csg_entity_c *E, partition_c *part, group_c &front,
                             group_c &back) {
-    double d = PerpDist(E->x, E->y, part->x1, part->y1, part->x2, part->y2);
+    double d =
+        util::PerpDist(E->x, E->y, part->x1, part->y1, part->x2, part->y2);
 
     if (d >= 0) {
         front.AddEntity(E);

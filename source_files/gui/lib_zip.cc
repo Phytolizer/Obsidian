@@ -401,7 +401,7 @@ int ZIPF_NumEntries(void) { return (int)r_end_part.total_entries; }
 
 int ZIPF_FindEntry(const char *name) {
     for (unsigned int i = 0; i < r_end_part.total_entries; i++) {
-        if (StringCaseCmp(name, r_directory[i].name) == 0) {
+        if (util::StringCaseCmp(name, r_directory[i].name) == 0) {
             return i;
         }
     }

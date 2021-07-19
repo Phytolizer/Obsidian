@@ -103,7 +103,7 @@ const char *Theme_OutputFilename() {
         }
     }
 
-    return StringDup(filename);
+    return util::StringDup(filename);
 }
 
 const char *Theme_AskLoadFilename() {
@@ -141,72 +141,72 @@ const char *Theme_AskLoadFilename() {
 
 static void Parse_Theme_Option(const char *name, const char *value) {
 
-	if (StringCaseCmp(name, "window_scaling") == 0) {
+	if (util::StringCaseCmp(name, "window_scaling") == 0) {
         window_scaling = atoi(value);
         window_scaling = CLAMP(0, window_scaling, 5);
-    } else if (StringCaseCmp(name, "font_scaling") == 0) {
+    } else if (util::StringCaseCmp(name, "font_scaling") == 0) {
         font_scaling = atoi(value);
-    } else if (StringCaseCmp(name, "font_theme") == 0) {
+    } else if (util::StringCaseCmp(name, "font_theme") == 0) {
         font_theme = atoi(value);
-    } else if (StringCaseCmp(name, "widget_theme") == 0) {
+    } else if (util::StringCaseCmp(name, "widget_theme") == 0) {
         widget_theme = atoi(value);
-    } else if (StringCaseCmp(name, "box_theme") == 0) {
+    } else if (util::StringCaseCmp(name, "box_theme") == 0) {
         box_theme = atoi(value);
-    } else if (StringCaseCmp(name, "button_theme") == 0) {
+    } else if (util::StringCaseCmp(name, "button_theme") == 0) {
         button_theme = atoi(value);
-    } else if (StringCaseCmp(name, "single_pane") == 0) {
+    } else if (util::StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
-    } else if (StringCaseCmp(name, "use_system_fonts") == 0) {
+    } else if (util::StringCaseCmp(name, "use_system_fonts") == 0) {
         use_system_fonts = atoi(value) ? true : false;
-	} else if (StringCaseCmp(name, "color_scheme") == 0) {
+	} else if (util::StringCaseCmp(name, "color_scheme") == 0) {
         color_scheme = atoi(value);
-	} else if (StringCaseCmp(name, "text_red") == 0) {
+	} else if (util::StringCaseCmp(name, "text_red") == 0) {
         text_red = atoi(value);
-	} else if (StringCaseCmp(name, "text_green") == 0) {
+	} else if (util::StringCaseCmp(name, "text_green") == 0) {
         text_green = atoi(value);  
-	} else if (StringCaseCmp(name, "text_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "text_blue") == 0) {
         text_blue = atoi(value);
-	} else if (StringCaseCmp(name, "text2_red") == 0) {
+	} else if (util::StringCaseCmp(name, "text2_red") == 0) {
         text2_red = atoi(value);
-	} else if (StringCaseCmp(name, "text2_green") == 0) {
+	} else if (util::StringCaseCmp(name, "text2_green") == 0) {
         text2_green = atoi(value);  
-	} else if (StringCaseCmp(name, "text2_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "text2_blue") == 0) {
         text2_blue = atoi(value);
-	} else if (StringCaseCmp(name, "bg_red") == 0) {
+	} else if (util::StringCaseCmp(name, "bg_red") == 0) {
         bg_red = atoi(value);
-	} else if (StringCaseCmp(name, "bg_green") == 0) {
+	} else if (util::StringCaseCmp(name, "bg_green") == 0) {
         bg_green = atoi(value);  
-	} else if (StringCaseCmp(name, "bg_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "bg_blue") == 0) {
         bg_blue = atoi(value);
-	} else if (StringCaseCmp(name, "bg2_red") == 0) {
+	} else if (util::StringCaseCmp(name, "bg2_red") == 0) {
         bg2_red = atoi(value);
-	} else if (StringCaseCmp(name, "bg2_green") == 0) {
+	} else if (util::StringCaseCmp(name, "bg2_green") == 0) {
         bg2_green = atoi(value);  
-	} else if (StringCaseCmp(name, "bg2_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "bg2_blue") == 0) {
         bg2_blue = atoi(value);
-	} else if (StringCaseCmp(name, "button_red") == 0) {
+	} else if (util::StringCaseCmp(name, "button_red") == 0) {
         button_red = atoi(value);
-	} else if (StringCaseCmp(name, "button_green") == 0) {
+	} else if (util::StringCaseCmp(name, "button_green") == 0) {
         button_green = atoi(value);  
-	} else if (StringCaseCmp(name, "button_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "button_blue") == 0) {
         button_blue = atoi(value);
-	} else if (StringCaseCmp(name, "gradient_red") == 0) {
+	} else if (util::StringCaseCmp(name, "gradient_red") == 0) {
         gradient_red = atoi(value);
-	} else if (StringCaseCmp(name, "gradient_green") == 0) {
+	} else if (util::StringCaseCmp(name, "gradient_green") == 0) {
         gradient_green = atoi(value);  
-	} else if (StringCaseCmp(name, "gradient_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "gradient_blue") == 0) {
         gradient_blue = atoi(value);
-	} else if (StringCaseCmp(name, "border_red") == 0) {
+	} else if (util::StringCaseCmp(name, "border_red") == 0) {
         border_red = atoi(value);
-	} else if (StringCaseCmp(name, "border_green") == 0) {
+	} else if (util::StringCaseCmp(name, "border_green") == 0) {
         border_green = atoi(value);  
-	} else if (StringCaseCmp(name, "border_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "border_blue") == 0) {
         border_blue = atoi(value);
-	} else if (StringCaseCmp(name, "gap_red") == 0) {
+	} else if (util::StringCaseCmp(name, "gap_red") == 0) {
         gap_red = atoi(value);
-	} else if (StringCaseCmp(name, "gap_green") == 0) {
+	} else if (util::StringCaseCmp(name, "gap_green") == 0) {
         gap_green = atoi(value);  
-	} else if (StringCaseCmp(name, "gap_blue") == 0) {
+	} else if (util::StringCaseCmp(name, "gap_blue") == 0) {
         gap_blue = atoi(value);
     } else {
         LogPrintf("Unknown option: '%s'\n", name);

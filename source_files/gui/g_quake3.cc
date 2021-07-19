@@ -214,11 +214,11 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
     const char *medium = A->props.getStr("medium", NULL);
 
     if (medium) {
-        if (StringCaseCmp(medium, "slime") == 0) {
+        if (util::StringCaseCmp(medium, "slime") == 0) {
             raw_brush.shaderNum = SHADER_COMMON_SLIME;
-        } else if (StringCaseCmp(medium, "lava") == 0) {
+        } else if (util::StringCaseCmp(medium, "lava") == 0) {
             raw_brush.shaderNum = SHADER_COMMON_LAVA;
-        } else if (StringCaseCmp(medium, "trigger") == 0) {
+        } else if (util::StringCaseCmp(medium, "trigger") == 0) {
             raw_brush.shaderNum = SHADER_COMMON_TRIGGER;
         } else {
             raw_brush.shaderNum = SHADER_COMMON_WATER;
@@ -346,7 +346,7 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
     raw_tex.contentFlags = LE_U32(contents);
 
     // find an existing shader in the hash table
-    int hash = (int)StringHash(texture) & (NUM_SHADER_HASH - 1);
+    int hash = (int)util::StringHash(texture) & (NUM_SHADER_HASH - 1);
 
     SYS_ASSERT(hash >= 0);
 
@@ -1227,17 +1227,17 @@ bool quake3_game_interface_c::Start(const char *preset) {
     qk_world_model = NULL;
 
     if (!water_shader) {
-        water_shader = StringDup("liquids/water");
+        water_shader = util::StringDup("liquids/water");
     }
     if (!slime_shader) {
-        slime_shader = StringDup("liquids/slime");
+        slime_shader = util::StringDup("liquids/slime");
     }
     if (!lava_shader) {
-        lava_shader = StringDup("liquids/lava");
+        lava_shader = util::StringDup("liquids/lava");
     }
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = util::StringDup(batch_output_file);
     } else {
         filename = DLG_OutputFilename("pk3");
     }
@@ -1288,18 +1288,18 @@ void quake3_game_interface_c::BeginLevel() {
 }
 
 void quake3_game_interface_c::Property(const char *key, const char *value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
-    } else if (StringCaseCmp(key, "description") == 0) {
-        description = StringDup(value);
-    } else if (StringCaseCmp(key, "default_tex_scale") == 0) {
+    if (util::StringCaseCmp(key, "level_name") == 0) {
+        level_name = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "description") == 0) {
+        description = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "default_tex_scale") == 0) {
         q3_default_tex_scale = atof(value);
-    } else if (StringCaseCmp(key, "water_shader") == 0) {
-        water_shader = StringDup(value);
-    } else if (StringCaseCmp(key, "slime_shader") == 0) {
-        slime_shader = StringDup(value);
-    } else if (StringCaseCmp(key, "lava_shader") == 0) {
-        lava_shader = StringDup(value);
+    } else if (util::StringCaseCmp(key, "water_shader") == 0) {
+        water_shader = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "slime_shader") == 0) {
+        slime_shader = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "lava_shader") == 0) {
+        lava_shader = util::StringDup(value);
     } else {
         LogPrintf("WARNING: unknown QUAKE3 property: %s=%s\n", key, value);
     }
@@ -1324,10 +1324,10 @@ void quake3_game_interface_c::EndLevel() {
 
     DP_CreateRTLights(entry_in_pak);
 
-    StringFree(level_name);
+    util::StringFree(level_name);
 
     if (description) {
-        StringFree(description);
+        util::StringFree(description);
     }
 }
 

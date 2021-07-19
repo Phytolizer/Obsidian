@@ -109,78 +109,84 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 //------------------------------------------------------------------------
 //  SLUMP WAD Creation for Vanilla Doom
 //------------------------------------------------------------------------
-int Slump_MakeWAD(const char* filename) {
-	s_config slump_config;
-	slump_config.outfile = (char *)filename;
-	levelcount = main_win->game_box->length->GetID();
-	if (levelcount == "single") {
-		slump_config.levelcount = 1;	
-	} else if (levelcount == "few") {
-		slump_config.levelcount = 4;
-	} else if (levelcount == "episode") {
-		slump_config.levelcount = 11;
-	} else {
-		slump_config.levelcount = 32; // "Full Game"
-	}
-	current_game = main_win->game_box->game->GetID();
-	if (current_game == "doom1" || current_game == "ultdoom") {
-		slump_config.gamemask = DOOM1_BIT;
-		slump_config.map = 0;
-		slump_config.episode = 1;
-		slump_config.mission = 1;
-	} else {
-		slump_config.gamemask = DOOM2_BIT;
-		slump_config.map = 1;
-		slump_config.episode = 0;
-		slump_config.mission = 0;
-	}	
-	int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_minrooms")->mod_slider->value();
-	if (minrooms == 1) {
-		slump_config.minrooms = twister_Between(2, 37);
-	} else {
-		slump_config.minrooms = minrooms;
-	}
-	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_bigify")->mod_slider->value();
-	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_forkiness")->mod_slider->value();
-	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_dm_starts")->mod_check->value()) {
-		slump_config.do_dm = 1;
-	} else {
-		slump_config.do_dm = 0;
-	}
-	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_major_nukage")->mod_check->value()) {
-		slump_config.major_nukage = SLUMP_TRUE;
-	} else {
-		slump_config.major_nukage = SLUMP_FALSE;
-	}
-	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_immediate_monsters")->mod_check->value()) {
-		slump_config.immediate_monsters = SLUMP_FALSE;
-	} else {
-		slump_config.immediate_monsters = rollpercent(20);
-	}
-	monvariety = main_win->left_mods->FindID("ui_slump_mons")
-							->FindOpt("slump_mons")->mod_menu->GetID();
-	if (monvariety == "normal") {
-		slump_config.required_monster_bits = 0;
-		slump_config.forbidden_monster_bits = SPECIAL;
-	} else if (monvariety == "shooters") {
-		slump_config.required_monster_bits = SHOOTS;
-		slump_config.forbidden_monster_bits = SPECIAL;
-	} else if (monvariety == "noflyzone") {
-		slump_config.required_monster_bits = 0;
-		slump_config.forbidden_monster_bits = FLIES + SPECIAL;
-	} else {
-		slump_config.required_monster_bits = SPECIAL; // All Nazis
-		slump_config.forbidden_monster_bits = 0;
-	}					
-	return slump_main(slump_config);    
-}	
-
+int Slump_MakeWAD(const char *filename) {
+    s_config slump_config;
+    slump_config.outfile = (char *)filename;
+    levelcount = main_win->game_box->length->GetID();
+    if (levelcount == "single") {
+        slump_config.levelcount = 1;
+    } else if (levelcount == "few") {
+        slump_config.levelcount = 4;
+    } else if (levelcount == "episode") {
+        slump_config.levelcount = 11;
+    } else {
+        slump_config.levelcount = 32;  // "Full Game"
+    }
+    current_game = main_win->game_box->game->GetID();
+    if (current_game == "doom1" || current_game == "ultdoom") {
+        slump_config.gamemask = DOOM1_BIT;
+        slump_config.map = 0;
+        slump_config.episode = 1;
+        slump_config.mission = 1;
+    } else {
+        slump_config.gamemask = DOOM2_BIT;
+        slump_config.map = 1;
+        slump_config.episode = 0;
+        slump_config.mission = 0;
+    }
+    int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
+                       ->FindSliderOpt("float_minrooms")
+                       ->mod_slider->value();
+    if (minrooms == 1) {
+        slump_config.minrooms = twister_Between(2, 37);
+    } else {
+        slump_config.minrooms = minrooms;
+    }
+    slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
+                                ->FindSliderOpt("float_bigify")
+                                ->mod_slider->value();
+    slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
+                                 ->FindSliderOpt("float_forkiness")
+                                 ->mod_slider->value();
+    if (main_win->left_mods->FindID("ui_slump_arch")
+            ->FindButtonOpt("bool_dm_starts")
+            ->mod_check->value()) {
+        slump_config.do_dm = 1;
+    } else {
+        slump_config.do_dm = 0;
+    }
+    if (main_win->left_mods->FindID("ui_slump_arch")
+            ->FindButtonOpt("bool_major_nukage")
+            ->mod_check->value()) {
+        slump_config.major_nukage = SLUMP_TRUE;
+    } else {
+        slump_config.major_nukage = SLUMP_FALSE;
+    }
+    if (main_win->left_mods->FindID("ui_slump_arch")
+            ->FindButtonOpt("bool_immediate_monsters")
+            ->mod_check->value()) {
+        slump_config.immediate_monsters = SLUMP_FALSE;
+    } else {
+        slump_config.immediate_monsters = rollpercent(20);
+    }
+    monvariety = main_win->left_mods->FindID("ui_slump_mons")
+                     ->FindOpt("slump_mons")
+                     ->mod_menu->GetID();
+    if (monvariety == "normal") {
+        slump_config.required_monster_bits = 0;
+        slump_config.forbidden_monster_bits = SPECIAL;
+    } else if (monvariety == "shooters") {
+        slump_config.required_monster_bits = SHOOTS;
+        slump_config.forbidden_monster_bits = SPECIAL;
+    } else if (monvariety == "noflyzone") {
+        slump_config.required_monster_bits = 0;
+        slump_config.forbidden_monster_bits = FLIES + SPECIAL;
+    } else {
+        slump_config.required_monster_bits = SPECIAL;  // All Nazis
+        slump_config.forbidden_monster_bits = 0;
+    }
+    return slump_main(slump_config);
+}
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -342,9 +348,9 @@ void DM_BeginLevel() {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
             textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
-	    if (current_engine == "eternity") {
-		textmap_lump->Printf("ee_compat = true;\n\n");
-	    }
+            if (current_engine == "eternity") {
+                textmap_lump->Printf("ee_compat = true;\n\n");
+            }
         }
         endmap_lump = new qLump_c();
     }
@@ -845,7 +851,8 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     LogPrintf("\n");
 
     zdbsp_options options;
-    if (current_engine == "vanilla" || current_engine == "nolimit" || current_engine == "boom") {
+    if (current_engine == "vanilla" || current_engine == "nolimit" ||
+        current_engine == "boom") {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
@@ -872,32 +879,33 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.compress_gl_nodes = false;
         options.force_compression = false;
     } else if (current_engine == "eternity") {
-        options.build_nodes = true;     	
+        options.build_nodes = true;
         if (UDMF_mode) {
-	    options.build_gl_nodes = true;
-	    options.build_gl_only = true;
-	} else {
-	    options.build_gl_nodes = false;
-	    options.build_gl_only = false;
-	}
-	options.reject_mode = ERM_DontTouch; // Eternity might not play well with ZDBSP's reject builder
+            options.build_gl_nodes = true;
+            options.build_gl_only = true;
+        } else {
+            options.build_gl_nodes = false;
+            options.build_gl_only = false;
+        }
+        options.reject_mode = ERM_DontTouch;  // Eternity might not play well
+                                              // with ZDBSP's reject builder
         options.check_polyobjs = true;
         options.compress_nodes = true;
         options.compress_gl_nodes = false;
         options.force_compression = false;
     } else if (current_engine == "edge") {
-    	if (!UDMF_mode) {
-    		if (!build_nodes) {
-			    LogPrintf("Skipping nodes per user selection...\n");
-		        FileRename(filename, out_name);
-		        return true;
-		     }
+        if (!UDMF_mode) {
+            if (!build_nodes) {
+                LogPrintf("Skipping nodes per user selection...\n");
+                FileRename(filename, out_name);
+                return true;
+            }
         }
-        options.build_nodes = true;     	
+        options.build_nodes = true;
         options.build_gl_nodes = true;
         options.build_gl_only = true;
         if (!build_reject || UDMF_mode) {
-	    options.reject_mode = ERM_DontTouch;
+            options.reject_mode = ERM_DontTouch;
         } else {
             options.reject_mode = ERM_Rebuild;
         }
@@ -915,7 +923,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_gl_nodes = true;
         options.build_gl_only = true;
         if (!build_reject || UDMF_mode) {
-	    options.reject_mode = ERM_DontTouch;
+            options.reject_mode = ERM_DontTouch;
         } else {
             options.reject_mode = ERM_Rebuild;
         }
@@ -944,7 +952,7 @@ class doom_game_interface_c : public game_interface_c {
    public:
     doom_game_interface_c() : filename(NULL) {}
 
-    ~doom_game_interface_c() { StringFree(filename); }
+    ~doom_game_interface_c() { util::StringFree(filename); }
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -965,7 +973,7 @@ bool doom_game_interface_c::Start(const char *preset) {
     ef_thing_mode = 0;
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = util::StringDup(batch_output_file);
     } else {
         filename = DLG_OutputFilename("wad", preset);
     }
@@ -984,8 +992,8 @@ bool doom_game_interface_c::Start(const char *preset) {
         current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "vanilla") {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
-                           ->FindButtonOpt("bool_build_reject")
-                           ->mod_check->value();
+                               ->FindButtonOpt("bool_build_reject")
+                               ->mod_check->value();
             if (Slump_MakeWAD(filename) == 0) {
                 return true;
             } else {
@@ -1001,16 +1009,17 @@ bool doom_game_interface_c::Start(const char *preset) {
 
     if (main_win) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
-        if (current_engine == "zdoom" || current_engine == "edge" || current_engine == "eternity") {
+        if (current_engine == "zdoom" || current_engine == "edge" ||
+            current_engine == "eternity") {
             build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
                                ->FindButtonOpt("bool_build_reject_udmf")
                                ->mod_check->value();
-		    map_format = main_win->left_mods->FindID("ui_udmf_map_options")
-		                     ->FindOpt("map_format")
-		                     ->mod_menu->GetID();
-		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
-		                      ->FindButtonOpt("bool_build_nodes_udmf")
-		                      ->mod_check->value();
+            map_format = main_win->left_mods->FindID("ui_udmf_map_options")
+                             ->FindOpt("map_format")
+                             ->mod_menu->GetID();
+            build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
+                              ->FindButtonOpt("bool_build_nodes_udmf")
+                              ->mod_check->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                                ->FindButtonOpt("bool_build_reject")
@@ -1034,7 +1043,7 @@ bool doom_game_interface_c::BuildNodes() {
 
     if (!FileRename(filename, temp_name)) {
         LogPrintf("WARNING: could not rename file to .TMP!\n");
-        StringFree(temp_name);
+        util::StringFree(temp_name);
         return false;
     }
 
@@ -1042,7 +1051,7 @@ bool doom_game_interface_c::BuildNodes() {
 
     FileDelete(temp_name);
 
-    StringFree(temp_name);
+    util::StringFree(temp_name);
 
     return result;
 }
@@ -1080,28 +1089,28 @@ void doom_game_interface_c::BeginLevel() {
 }
 
 void doom_game_interface_c::Property(const char *key, const char *value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
-    } else if (StringCaseCmp(key, "description") == 0) {
+    if (util::StringCaseCmp(key, "level_name") == 0) {
+        level_name = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "description") == 0) {
         main_win->build_box->name_disp->copy_label(value);
         main_win->build_box->name_disp->redraw();
-    } else if (StringCaseCmp(key, "sub_format") == 0) {
-        if (StringCaseCmp(value, "doom") == 0) {
+    } else if (util::StringCaseCmp(key, "sub_format") == 0) {
+        if (util::StringCaseCmp(value, "doom") == 0) {
             dm_sub_format = 0;
-        } else if (StringCaseCmp(value, "hexen") == 0) {
+        } else if (util::StringCaseCmp(value, "hexen") == 0) {
             dm_sub_format = SUBFMT_Hexen;
-        } else if (StringCaseCmp(value, "strife") == 0) {
+        } else if (util::StringCaseCmp(value, "strife") == 0) {
             dm_sub_format = SUBFMT_Strife;
         } else {
             LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
         }
-    } else if (StringCaseCmp(key, "offset_map") == 0) {
+    } else if (util::StringCaseCmp(key, "offset_map") == 0) {
         dm_offset_map = atoi(value);
-    } else if (StringCaseCmp(key, "ef_solid_type") == 0) {
+    } else if (util::StringCaseCmp(key, "ef_solid_type") == 0) {
         ef_solid_type = atoi(value);
-    } else if (StringCaseCmp(key, "ef_liquid_type") == 0) {
+    } else if (util::StringCaseCmp(key, "ef_liquid_type") == 0) {
         ef_liquid_type = atoi(value);
-    } else if (StringCaseCmp(key, "ef_thing_mode") == 0) {
+    } else if (util::StringCaseCmp(key, "ef_thing_mode") == 0) {
         ef_thing_mode = atoi(value);
     } else {
         LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);
@@ -1124,7 +1133,7 @@ void doom_game_interface_c::EndLevel() {
 
     DM_EndLevel(level_name);
 
-    StringFree(level_name);
+    util::StringFree(level_name);
     level_name = NULL;
 }
 

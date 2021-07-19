@@ -44,8 +44,8 @@ typedef struct {
 static std::vector<addon_info_t> all_addons;
 
 void VFS_AddFolder(const char *name) {
-    char *path = StringPrintf("%s/%s", install_dir, name);
-    char *mount = StringPrintf("/%s", name);
+    char *path = util::StringPrintf("%s/%s", install_dir, name);
+    char *mount = util::StringPrintf("/%s", name);
 
     if (!PHYSFS_mount(path, mount, 0)) {
         Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name,
@@ -62,7 +62,7 @@ bool VFS_AddArchive(const char *filename, bool options_file) {
     if (!HasExtension(filename)) {
         filename = ReplaceExtension(filename, "pk3");
     } else {
-        filename = StringDup(filename);
+        filename = util::StringDup(filename);
     }
 
     // when handling "bare" filenames from the command line (i.e. ones
@@ -70,12 +70,12 @@ bool VFS_AddArchive(const char *filename, bool options_file) {
     // the current dir, look for it in the standard addons/ folder.
     if (options_file ||
         (!FileExists(filename) && filename == fl_filename_name(filename))) {
-        char *new_name = StringPrintf("%s/addons/%s", home_dir, filename);
+        char *new_name = util::StringPrintf("%s/addons/%s", home_dir, filename);
         if (!FileExists(new_name)) {
-            StringFree(new_name);
-            new_name = StringPrintf("%s/addons/%s", install_dir, filename);
+            util::StringFree(new_name);
+            new_name = util::StringPrintf("%s/addons/%s", install_dir, filename);
         }
-        StringFree(filename);
+        util::StringFree(filename);
         filename = new_name;
     }
 
@@ -162,16 +162,16 @@ void VFS_ScanForAddons() {
 
     all_addons.clear();
 
-    char *dir_name = StringPrintf("%s/addons", home_dir);
+    char *dir_name = util::StringPrintf("%s/addons", home_dir);
 
     std::vector<std::string> list;
     int result1 = ScanDir_MatchingFiles(dir_name, "pk3", list);
     int result2 = 0;
 
     if (std::string(home_dir).compare(std::string(install_dir)) != 0) {
-        StringFree(dir_name);
+        util::StringFree(dir_name);
 
-        dir_name = StringPrintf("%s/addons", install_dir);
+        dir_name = util::StringPrintf("%s/addons", install_dir);
 
         std::vector<std::string> list2;
 
@@ -190,7 +190,7 @@ void VFS_ScanForAddons() {
     for (unsigned int i = 0; i < list.size(); i++) {
         addon_info_t info;
 
-        info.name = StringDup(list[i].c_str());
+        info.name = util::StringDup(list[i].c_str());
 
         info.enabled = false;
 
@@ -320,7 +320,7 @@ class UI_Addon : public Fl_Group {
         box(box_style);
 
         // prefix the name with a space
-        const char *name2 = StringPrintf(" %s", info->name);
+        const char *name2 = util::StringPrintf(" %s", info->name);
 
         button = new UI_CustomCheckBox(x + kf_w(6), y + kf_h(4), w - kf_w(12),
                                      kf_h(24), name2);
@@ -441,7 +441,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     sbar->color(GAP_COLOR, BUTTON_COLOR);
     sbar->labelcolor(SELECTION);
 
-    const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
+    const char *pack_title = util::StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
     if (all_addons.empty()) {
         pack = new Fl_Group(mx, my, mw, mh, pack_title);
     } else {

@@ -441,7 +441,7 @@ class doom_linedef_c {
     }
 
     void CalcLength() {
-        length = ComputeDist(start->x, start->y, end->x, end->y);
+        length = util::ComputeDist(start->x, start->y, end->x, end->y);
     }
 
     inline doom_vertex_c *OtherVert(const doom_vertex_c *V) const {
@@ -1147,9 +1147,11 @@ static int NaturalXOffset(doom_linedef_c *L, int side) {
     double along;
 
     if (side == 0) {
-        along = AlongDist(0, 0, L->start->x, L->start->y, L->end->x, L->end->y);
+        along = util::AlongDist(0, 0, L->start->x, L->start->y, L->end->x,
+                                L->end->y);
     } else {
-        along = AlongDist(0, 0, L->end->x, L->end->y, L->start->x, L->start->y);
+        along = util::AlongDist(0, 0, L->end->x, L->end->y, L->start->x,
+                                L->start->y);
     }
 
     return I_ROUND(-along);
@@ -1159,7 +1161,7 @@ static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox) {
     double along = 0;
 
     if (S) {
-        along = ComputeDist(V->x, V->y, S->x2, S->y2);
+        along = util::ComputeDist(V->x, V->y, S->x2, S->y2);
     }
 
     return (int)(along + ox);

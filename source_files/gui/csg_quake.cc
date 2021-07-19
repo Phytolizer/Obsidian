@@ -95,8 +95,10 @@ class quake_side_c {
         double sx, sy;
         double ex, ey;
 
-        AlongCoord(along1, part->x1, part->y1, part->x2, part->y2, &sx, &sy);
-        AlongCoord(along2, part->x1, part->y1, part->x2, part->y2, &ex, &ey);
+        util::AlongCoord(along1, part->x1, part->y1, part->x2, part->y2, &sx,
+                         &sy);
+        util::AlongCoord(along2, part->x1, part->y1, part->x2, part->y2, &ex,
+                         &ey);
 
         x1 = sx;
         y1 = sy;
@@ -107,7 +109,7 @@ class quake_side_c {
     ~quake_side_c() {}
 
    public:
-    double Length() const { return ComputeDist(x1, y1, x2, y2); }
+    double Length() const { return util::ComputeDist(x1, y1, x2, y2); }
 
     bool TwoSided() const {
         if (!snag->partner) {
@@ -546,9 +548,11 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
     double along;
 
     if (vert == 0) {
-        along = AlongDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
+        along = util::AlongDist(S->x1, S->y1, part->x1, part->y1, part->x2,
+                                part->y2);
     } else {
-        along = AlongDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
+        along = util::AlongDist(S->x2, S->y2, part->x1, part->y1, part->x2,
+                                part->y2);
     }
 
     // compute the angle between the two vectors
@@ -557,12 +561,12 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
 
     if (kind != K1_SITTING) {
         if (vert == 0) {
-            s_angle = CalcAngle(S->x1, S->y1, S->x2, S->y2);
+            s_angle = util::CalcAngle(S->x1, S->y1, S->x2, S->y2);
         } else {
-            s_angle = CalcAngle(S->x2, S->y2, S->x1, S->y1);
+            s_angle = util::CalcAngle(S->x2, S->y2, S->x1, S->y1);
         }
 
-        p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
+        p_angle = util::CalcAngle(part->x1, part->y1, part->x2, part->y2);
 
         // DebugPrintf("\nPART = (%1.0f %1.0f) .. (%1.0f %1.0f) along:%1.0f
         // raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along,
@@ -766,7 +770,8 @@ static int XY_BrushSide(const csg_brush_c *B, const quake_side_c *part) {
     for (unsigned int i = 0; i < B->verts.size(); i++) {
         brush_vert_c *V = B->verts[i];
 
-        float d = PerpDist(V->x, V->y, part->x1, part->y1, part->x2, part->y2);
+        float d =
+            util::PerpDist(V->x, V->y, part->x1, part->y1, part->x2, part->y2);
 
         min_d = MIN(min_d, d);
         max_d = MAX(max_d, d);
@@ -806,11 +811,11 @@ static void Split_XY(quake_group_c &group, quake_node_c *node,
         quake_side_c *S = local_sides[k];
 
         // get relationship of this side to the partition line
-        double a =
-            PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
+        double a = util::PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2,
+                                  part->y2);
 
-        double b =
-            PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
+        double b = util::PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2,
+                                  part->y2);
 
         int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
         int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
@@ -819,8 +824,8 @@ static void Split_XY(quake_group_c &group, quake_node_c *node,
         if (a_side == 0 && b_side == 0) {
             S->on_node = node;
 
-            if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
-                              S->x2 - S->x1, S->y2 - S->y1)) {
+            if (util::VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
+                                    S->x2 - S->x1, S->y2 - S->y1)) {
                 front.AddSide(S);
 
                 S->node_side = 0;
@@ -1039,7 +1044,7 @@ static void CollectWinding(quake_group_c &group,
     for (int a = 0; a < v_num; a++) {
         quake_side_c *S = group.sides[a];
 
-        angles[a] = 0 - CalcAngle(mid_x, mid_y, S->x1, S->y1);
+        angles[a] = 0 - util::CalcAngle(mid_x, mid_y, S->x1, S->y1);
         mapping[a] = a;
     }
 
@@ -1761,15 +1766,15 @@ static int ParseLiquidMedium(csg_property_set_c *props) {
     const char *str = props->getStr("medium");
 
     if (str) {
-        if (StringCaseCmp(str, "water") == 0) {
+        if (util::StringCaseCmp(str, "water") == 0) {
             return MEDIUM_WATER;
         }
 
-        if (StringCaseCmp(str, "slime") == 0) {
+        if (util::StringCaseCmp(str, "slime") == 0) {
             return MEDIUM_SLIME;
         }
 
-        if (StringCaseCmp(str, "lava") == 0) {
+        if (util::StringCaseCmp(str, "lava") == 0) {
             return MEDIUM_LAVA;
         }
 
@@ -2007,9 +2012,9 @@ static const char *leaf_to_string(quake_leaf_c *L, quake_node_c *N) {
     if (L) return "WTF";
 
     // for the nodeviewer, a "leaf" is when we hit Partition_Z
-    if (fabs(N->plane.nz) > 0.5) return StringPrintf("LEAF");
+    if (fabs(N->plane.nz) > 0.5) return util::StringPrintf("LEAF");
 
-    return StringPrintf("N:%p", N);
+    return util::StringPrintf("N:%p", N);
 }
 #endif
 

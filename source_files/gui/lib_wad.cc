@@ -176,7 +176,7 @@ int WAD_FindEntry(const char *name) {
         strncpy(buffer, wad_R_dir[i].name, 8);
         buffer[8] = 0;
 
-        if (StringCaseCmp(name, buffer) == 0) {
+        if (util::StringCaseCmp(name, buffer) == 0) {
             return i;
         }
     }
@@ -502,7 +502,7 @@ int WAD2_NumEntries(void) { return (int)wad2_R_header.num_lumps; }
 
 int WAD2_FindEntry(const char *name) {
     for (unsigned int i = 0; i < wad2_R_header.num_lumps; i++) {
-        if (StringCaseCmp(name, wad2_R_dir[i].name) == 0) {
+        if (util::StringCaseCmp(name, wad2_R_dir[i].name) == 0) {
             return i;
         }
     }

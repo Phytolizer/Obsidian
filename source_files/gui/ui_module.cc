@@ -95,7 +95,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
     // make label with ': ' suffixed
     int len = strlen(label);
-    char *new_label = StringNew(len + 4);
+    char *new_label = util::StringNew(len + 4);
     strcpy(new_label, label);
     strcat(new_label, ": ");
 
@@ -132,7 +132,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
     opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
     cb_data->mod = rch;
-    cb_data->opt_name = StringDup(opt);
+    cb_data->opt_name = util::StringDup(opt);
 
     rch->mod_menu->callback(callback_OptChange, cb_data);
 
@@ -161,7 +161,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 
     // make label with ': ' suffixed
     int len = strlen(label);
-    char *new_label = StringNew(len + 4);
+    char *new_label = util::StringNew(len + 4);
     strcpy(new_label, label);
     strcat(new_label, ": ");
 
@@ -312,7 +312,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
     int len = strlen(label);
-    char *new_label = StringNew(len + 4);
+    char *new_label = util::StringNew(len + 4);
     strcpy(new_label, label);
     if (single_pane) {
     	strcat(new_label, ": ");

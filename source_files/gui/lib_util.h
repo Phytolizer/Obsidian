@@ -25,6 +25,8 @@
 
 /* string utilities */
 
+namespace util {
+
 int StringCaseCmp(const char *A, const char *B);
 int StringCaseCmpPartial(const char *A, const char *B);
 void StringMaxCopy(char *dest, const char *src, int max);
@@ -74,6 +76,8 @@ void AlongCoord(double along, double px1, double py1, double px2, double py2,
                 double *x, double *y);
 
 bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
+
+}  // namespace util
 
 #endif /* __LIB_UTIL_H__ */
 

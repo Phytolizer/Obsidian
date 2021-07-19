@@ -127,9 +127,9 @@ class infinite_line_c {
     int CalcHash() const {
         int hash;
 
-        hash = IntHash(I_ROUND(x * 1.4));
-        hash = IntHash(I_ROUND(y * 1.4) ^ hash);
-        hash = IntHash(I_ROUND(z * 1.4) ^ hash);
+        hash = util::IntHash(I_ROUND(x * 1.4));
+        hash = util::IntHash(I_ROUND(y * 1.4) ^ hash);
+        hash = util::IntHash(I_ROUND(z * 1.4) ^ hash);
 
         return hash;
     }

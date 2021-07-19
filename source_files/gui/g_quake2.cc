@@ -189,7 +189,7 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
     raw_tex.anim_next = LE_S32(0);  // TODO
 
     // find an existing texinfo in the hash table
-    int hash = (int)StringHash(texture) & (NUM_TEXINFO_HASH - 1);
+    int hash = (int)util::StringHash(texture) & (NUM_TEXINFO_HASH - 1);
 
     SYS_ASSERT(hash >= 0);
 
@@ -1008,7 +1008,7 @@ bool quake2_game_interface_c::Start(const char *preset) {
     QLIT_InitProperties();
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = util::StringDup(batch_output_file);
     } else {
         filename = DLG_OutputFilename("pak");
     }
@@ -1059,10 +1059,10 @@ void quake2_game_interface_c::BeginLevel() {
 }
 
 void quake2_game_interface_c::Property(const char *key, const char *value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
-    } else if (StringCaseCmp(key, "description") == 0) {
-        description = StringDup(value);
+    if (util::StringCaseCmp(key, "level_name") == 0) {
+        level_name = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "description") == 0) {
+        description = util::StringDup(value);
     } else {
         LogPrintf("WARNING: unknown QUAKE2 property: %s=%s\n", key, value);
     }
@@ -1083,10 +1083,10 @@ void quake2_game_interface_c::EndLevel() {
 
     Q2_CreateBSPFile(entry_in_pak);
 
-    StringFree(level_name);
+    util::StringFree(level_name);
 
     if (description) {
-        StringFree(description);
+        util::StringFree(description);
     }
 }
 

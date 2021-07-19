@@ -227,7 +227,7 @@ static int SHADE_CaveLighting(region_c *R, double z2)
 			continue;
 
 		// more complex distance check
-		double dist = ComputeDist(x1, y1, x2, y2);
+		double dist = util::ComputeDist(x1, y1, x2, y2);
 
 		int level;
 

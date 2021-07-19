@@ -39,10 +39,10 @@ class signal_pair_c {
    public:
     signal_pair_c(const char *_name, signal_notify_f _func, void *_priv)
         : func(_func), priv_dat(_priv) {
-        name = StringDup(_name);
+        name = util::StringDup(_name);
     }
 
-    ~signal_pair_c() { StringFree(name); }
+    ~signal_pair_c() { util::StringFree(name); }
 };
 
 static std::vector<signal_pair_c *> sig_list;
@@ -104,7 +104,7 @@ void Signal_Raise(const char *name) {
             }
         }
 
-        pending_sigs.push_back(StringDup(name));
+        pending_sigs.push_back(util::StringDup(name));
         return;
     }
 
@@ -114,7 +114,7 @@ void Signal_Raise(const char *name) {
     //   - copy names when added in the pending list
     //   - free names after we perform a notification run
 
-    name = StringDup(name);
+    name = util::StringDup(name);
 
     for (;;) {
         loop_count++;
@@ -136,7 +136,7 @@ void Signal_Raise(const char *name) {
 
         signal_in_progress = NULL;
 
-        StringFree(name);
+        util::StringFree(name);
 
         if (pending_sigs.empty()) {
             break;

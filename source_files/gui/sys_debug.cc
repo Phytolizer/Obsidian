@@ -32,7 +32,7 @@ static bool terminal = false;
 
 bool LogInit(const char *filename) {
     if (filename) {
-        log_filename = StringDup(filename);
+        log_filename = util::StringDup(filename);
 
         log_file = fopen(log_filename, "w");
 
@@ -69,7 +69,7 @@ void LogClose(void) {
         fclose(log_file);
         log_file = NULL;
 
-        StringFree(log_filename);
+        util::StringFree(log_filename);
         log_filename = NULL;
     }
 }
@@ -149,10 +149,10 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
 
     while (fgets(buffer, MSG_BUF_LEN - 2, log_file)) {
         // remove any newline at the end (LF or CR/LF)
-        StringRemoveCRLF(buffer);
+        util::StringRemoveCRLF(buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
-        StringReplaceChar(buffer, 0x7f, 0);
+        util::StringReplaceChar(buffer, 0x7f, 0);
 
         display_func(buffer, priv_data);
     }

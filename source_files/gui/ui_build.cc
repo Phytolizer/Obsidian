@@ -248,7 +248,7 @@ void UI_Build::Prog_Step(const char *step_name) {
     std::string newtitle = "[ ";
     newtitle.append(prog_label);
     newtitle.append(" ] ");
-    newtitle.append(StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+    newtitle.append(util::StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
     newtitle.append(" - ");
     newtitle.append(status_label);
     main_win->label(newtitle.c_str());
@@ -292,9 +292,9 @@ void UI_Build::SetStatus(const char *msg) {
 
     status_label[limit - 1] = 0;
 
-    if (StringCaseCmp(status_label, "Success") == 0) {
+    if (util::StringCaseCmp(status_label, "Success") == 0) {
         main_win->label(
-            StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+            util::StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
     }
 
     status->label(status_label);
@@ -327,7 +327,7 @@ void UI_Build::ParseSteps(const char *names) {
 
 int UI_Build::FindStep(const char *name) {
     for (int i = 0; i < (int)step_names.size(); i++) {
-        if (StringCaseCmp(step_names[i].c_str(), name) == 0) {
+        if (util::StringCaseCmp(step_names[i].c_str(), name) == 0) {
             return i;
         }
     }

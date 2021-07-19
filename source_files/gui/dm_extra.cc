@@ -218,13 +218,13 @@ int DM_wad_logo_gfx(lua_State *L) {
     // find the requested image (TODO: look in a table)
     const logo_image_t *logo = NULL;
 
-    if (StringCaseCmp(image, logo_BOLT.name) == 0) {
+    if (util::StringCaseCmp(image, logo_BOLT.name) == 0) {
         logo = &logo_BOLT;
-    } else if (StringCaseCmp(image, logo_PILL.name) == 0) {
+    } else if (util::StringCaseCmp(image, logo_PILL.name) == 0) {
         logo = &logo_PILL;
-    } else if (StringCaseCmp(image, logo_CARVE.name) == 0) {
+    } else if (util::StringCaseCmp(image, logo_CARVE.name) == 0) {
         logo = &logo_CARVE;
-    } else if (StringCaseCmp(image, logo_RELIEF.name) == 0) {
+    } else if (util::StringCaseCmp(image, logo_RELIEF.name) == 0) {
         logo = &logo_RELIEF;
     } else {
         return luaL_argerror(L, 3, "unknown image name");
@@ -1093,7 +1093,7 @@ void G_PushCleanString(lua_State *L, const char *buf, int len) {
     const char *src = buf;
     const char *s_end = src + len;
 
-    char *new_str = StringNew(len);
+    char *new_str = util::StringNew(len);
     char *dest = new_str;
 
     for (; src < s_end; src++) {
@@ -1106,7 +1106,7 @@ void G_PushCleanString(lua_State *L, const char *buf, int len) {
 
     lua_pushstring(L, new_str);
 
-    StringFree(new_str);
+    util::StringFree(new_str);
 }
 
 int DM_wad_read_text_lump(lua_State *L) {
@@ -1380,7 +1380,7 @@ int DM_title_free(lua_State *L) {
         delete title_last_tga;
         title_last_tga = NULL;
 
-        StringFree(title_last_filename);
+        util::StringFree(title_last_filename);
         title_last_filename = NULL;
     }
 
@@ -1392,7 +1392,7 @@ static bool TitleCacheImage(const char *filename) {
     if (!(title_last_filename && strcmp(title_last_filename, filename) == 0)) {
         if (title_last_tga) {
             delete title_last_tga;
-            StringFree(title_last_filename);
+            util::StringFree(title_last_filename);
             title_last_filename = NULL;
         }
 
@@ -1402,7 +1402,7 @@ static bool TitleCacheImage(const char *filename) {
             return false;
         }
 
-        title_last_filename = StringDup(filename);
+        title_last_filename = util::StringDup(filename);
     }
 
     return true;
@@ -1527,9 +1527,9 @@ int DM_title_write(lua_State *L) {
 
     qLump_c *lump;
 
-    if (StringCaseCmp(format, "tga") == 0) {
+    if (util::StringCaseCmp(format, "tga") == 0) {
         lump = TitleCreateTGA();
-    } else if (StringCaseCmp(format, "raw") == 0) {
+    } else if (util::StringCaseCmp(format, "raw") == 0) {
         lump = TitleCreateRaw();
     } else {
         lump = TitleCreatePatch();
@@ -1790,7 +1790,7 @@ static inline rgb_color_t CalcPixel(int x, int y) {
         case REND_Random:
             x = x | 1;
             y = y | 1;
-            hash = IntHash((y << 16) | x);
+            hash = util::IntHash((y << 16) | x);
             hash = (hash >> 8) & 3;
             return title_drawctx.color[hash];
     }

@@ -244,11 +244,11 @@ class UI_Manage_Config : public Fl_Double_Window {
     bool WantQuit() const { return want_quit; }
 
     void MarkSource(const char *where) {
-        char *full = StringPrintf("[ %s ]", where);
+        char *full = util::StringPrintf("[ %s ]", where);
 
         conf_disp->copy_label(full);
 
-        StringFree(full);
+        util::StringFree(full);
         redraw();
     }
 
@@ -259,15 +259,15 @@ class UI_Manage_Config : public Fl_Double_Window {
         int len = strlen(filename);
 
         if (len < 42) {
-            full = StringPrintf("[ %s ]", filename);
+            full = util::StringPrintf("[ %s ]", filename);
         } else {
-            full = StringPrintf("[ %.10s....%s ]", filename,
+            full = util::StringPrintf("[ %.10s....%s ]", filename,
                                 filename + (len - 30));
         }
 
         conf_disp->copy_label(full);
 
-        StringFree(full);
+        util::StringFree(full);
         redraw();
     }
 
@@ -715,7 +715,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         o->labelsize(small_font_size);
         o->labelfont(font_style);
 
-        const char *recent_title = StringPrintf("   %s @-3>", _("Recent"));
+        const char *recent_title = util::StringPrintf("   %s @-3>", _("Recent"));
         recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
                                          recent_title);
         recent_menu->box(button_style);

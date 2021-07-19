@@ -90,7 +90,7 @@ void NK_BeginLevel(const char *level_name) {
     char lump_name[40];
 
     sprintf(lump_name, "%s.MAP", level_name);
-    StringUpper(lump_name);
+    util::StringUpper(lump_name);
 
     GRP_NewLump(lump_name);
 
@@ -311,13 +311,13 @@ int NK_grp_logo_gfx(lua_State *L) {
     // find the requested image (TODO: look in a table)
     const logo_image_t *logo = NULL;
 
-    if (StringCaseCmp(image, logo_BOLT.name) == 0) {
+    if (util::StringCaseCmp(image, logo_BOLT.name) == 0) {
         logo = &logo_BOLT;
-    } else if (StringCaseCmp(image, logo_PILL.name) == 0) {
+    } else if (util::StringCaseCmp(image, logo_PILL.name) == 0) {
         logo = &logo_PILL;
-    } else if (StringCaseCmp(image, logo_CARVE.name) == 0) {
+    } else if (util::StringCaseCmp(image, logo_CARVE.name) == 0) {
         logo = &logo_CARVE;
-    } else if (StringCaseCmp(image, logo_RELIEF.name) == 0) {
+    } else if (util::StringCaseCmp(image, logo_RELIEF.name) == 0) {
         logo = &logo_RELIEF;
     } else {
         return luaL_argerror(L, 2, "unknown image name");
@@ -410,7 +410,7 @@ class nukem_game_interface_c : public game_interface_c {
    public:
     nukem_game_interface_c() : filename(NULL) {}
 
-    ~nukem_game_interface_c() { StringFree(filename); }
+    ~nukem_game_interface_c() { util::StringFree(filename); }
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -424,7 +424,7 @@ class nukem_game_interface_c : public game_interface_c {
 
 bool nukem_game_interface_c::Start(const char *preset) {
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = util::StringDup(batch_output_file);
     } else {
         filename = DLG_OutputFilename("grp");
     }
@@ -466,9 +466,9 @@ bool nukem_game_interface_c::Finish(bool build_ok) {
 void nukem_game_interface_c::BeginLevel() {}
 
 void nukem_game_interface_c::Property(const char *key, const char *value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
-    } else if (StringCaseCmp(key, "description") == 0) {
+    if (util::StringCaseCmp(key, "level_name") == 0) {
+        level_name = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "description") == 0) {
         // ignored (for now)
         // [another mechanism sets the description via BEX/DDF]
     } else {
@@ -491,7 +491,7 @@ void nukem_game_interface_c::EndLevel() {
 
     NK_EndLevel();
 
-    StringFree(level_name);
+    util::StringFree(level_name);
     level_name = NULL;
 }
 

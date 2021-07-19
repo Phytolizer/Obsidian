@@ -181,7 +181,7 @@ void Determine_WorkingPath(const char *argv0) {
             exit(9);
         }
 
-        home_dir = StringDup(arg_list[home_arg + 1]);
+        home_dir = util::StringDup(arg_list[home_arg + 1]);
         return;
     }
 
@@ -189,7 +189,7 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir = GetExecutablePath(argv0);
 
 #else
-    char *path = StringNew(FL_PATH_MAX + 4);
+    char *path = util::StringNew(FL_PATH_MAX + 4);
 
     if (fl_filename_expand(path, "$HOME/.config/obsidian") == 0) {
         Main_FatalError("Unable to find $HOME directory!\n");
@@ -204,12 +204,12 @@ void Determine_WorkingPath(const char *argv0) {
 #endif
 
     if (!home_dir) {
-        home_dir = StringDup(".");
+        home_dir = util::StringDup(".");
     }
 }
 
 static bool Verify_InstallDir(const char *path) {
-    const char *filename = StringPrintf("%s/scripts/oblige.lua", path);
+    const char *filename = util::StringPrintf("%s/scripts/oblige.lua", path);
 
 #if 0  // DEBUG
 	fprintf(stderr, "Trying install dir: [%s]\n", path);
@@ -218,7 +218,7 @@ static bool Verify_InstallDir(const char *path) {
 
     bool exists = FileExists(filename);
 
-    StringFree(filename);
+    util::StringFree(filename);
 
     return exists;
 }
@@ -236,7 +236,7 @@ void Determine_InstallDir(const char *argv0) {
             exit(9);
         }
 
-        install_dir = StringDup(arg_list[inst_arg + 1]);
+        install_dir = util::StringDup(arg_list[inst_arg + 1]);
 
         if (Verify_InstallDir(install_dir)) {
             return;
@@ -247,12 +247,12 @@ void Determine_InstallDir(const char *argv0) {
 
     // if run from current directory, look there
     if (argv0[0] == '.' && Verify_InstallDir(".")) {
-        install_dir = StringDup(".");
+        install_dir = util::StringDup(".");
         return;
     }
 
 #ifdef WIN32
-    install_dir = StringDup(home_dir);
+    install_dir = util::StringDup(home_dir);
 
 #else
     static const char *prefixes[] = {
@@ -262,13 +262,13 @@ void Determine_InstallDir(const char *argv0) {
     };
 
     for (int i = 0; prefixes[i]; i++) {
-        install_dir = StringPrintf("%s/share/obsidian", prefixes[i]);
+        install_dir = util::StringPrintf("%s/share/obsidian", prefixes[i]);
 
         if (Verify_InstallDir(install_dir)) {
             return;
         }
 
-        StringFree(install_dir);
+        util::StringFree(install_dir);
         install_dir = NULL;
     }
 #endif
@@ -287,9 +287,9 @@ void Determine_ConfigFile() {
             exit(9);
         }
 
-        config_file = StringDup(arg_list[conf_arg + 1]);
+        config_file = util::StringDup(arg_list[conf_arg + 1]);
     } else {
-        config_file = StringPrintf("%s/%s", home_dir, CONFIG_FILENAME);
+        config_file = util::StringPrintf("%s/%s", home_dir, CONFIG_FILENAME);
     }
 }
 
@@ -302,9 +302,9 @@ void Determine_OptionsFile() {
             exit(9);
         }
 
-        options_file = StringDup(arg_list[optf_arg + 1]);
+        options_file = util::StringDup(arg_list[optf_arg + 1]);
     } else {
-        options_file = StringPrintf("%s/%s", home_dir, OPTIONS_FILENAME);
+        options_file = util::StringPrintf("%s/%s", home_dir, OPTIONS_FILENAME);
     }
 }
 
@@ -317,9 +317,9 @@ void Determine_ThemeFile() {
             exit(9);
         }
 
-        theme_file = StringDup(arg_list[themef_arg + 1]);
+        theme_file = util::StringDup(arg_list[themef_arg + 1]);
     } else {
-        theme_file = StringPrintf("%s/%s", home_dir, THEME_FILENAME);
+        theme_file = util::StringPrintf("%s/%s", home_dir, THEME_FILENAME);
     }
 }
 
@@ -332,7 +332,7 @@ void Determine_LoggingFile() {
             exit(9);
         }
 
-        logging_file = StringDup(arg_list[logf_arg + 1]);
+        logging_file = util::StringDup(arg_list[logf_arg + 1]);
 
         // test that it can be created
         FILE *fp = fopen(logging_file, "w");
@@ -343,7 +343,7 @@ void Determine_LoggingFile() {
 
         fclose(fp);
     } else if (!batch_mode) {
-        logging_file = StringPrintf("%s/%s", home_dir, LOG_FILENAME);
+        logging_file = util::StringPrintf("%s/%s", home_dir, LOG_FILENAME);
     } else {
         logging_file = NULL;
     }
@@ -359,11 +359,11 @@ bool Main_BackupFile(const char *filename, const char *ext) {
 
         if (!FileRename(filename, backup_name)) {
             LogPrintf("WARNING: unable to rename file!\n");
-            StringFree(backup_name);
+            util::StringFree(backup_name);
             return false;
         }
 
-        StringFree(backup_name);
+        util::StringFree(backup_name);
     }
 
     return true;
@@ -662,7 +662,7 @@ void Main_Ticker() {
 
     static u32_t last_millis = 0;
 
-    u32_t cur_millis = TimeGetMillies();
+    u32_t cur_millis = util::TimeGetMillies();
 
     if ((cur_millis - last_millis) >= TICKER_TIME) {
         Fl::check();
@@ -786,22 +786,22 @@ bool Build_Cool_Shit() {
 
     // create game object
     {
-        if (StringCaseCmp(format, "doom") == 0) {
+        if (util::StringCaseCmp(format, "doom") == 0) {
             game_object = Doom_GameObject();
 
-        } else if (StringCaseCmp(format, "nukem") == 0) {
+        } else if (util::StringCaseCmp(format, "nukem") == 0) {
             game_object = Nukem_GameObject();
 
-            /// else if (StringCaseCmp(format, "wolf3d") == 0)
+            /// else if (util::StringCaseCmp(format, "wolf3d") == 0)
             ///   game_object = Wolf_GameObject();
 
-        } else if (StringCaseCmp(format, "quake") == 0) {
+        } else if (util::StringCaseCmp(format, "quake") == 0) {
             game_object = Quake1_GameObject();
 
-        } else if (StringCaseCmp(format, "quake2") == 0) {
+        } else if (util::StringCaseCmp(format, "quake2") == 0) {
             game_object = Quake2_GameObject();
 
-        } else if (StringCaseCmp(format, "quake3") == 0) {
+        } else if (util::StringCaseCmp(format, "quake3") == 0) {
             game_object = Quake3_GameObject();
 
         } else {
@@ -827,7 +827,7 @@ bool Build_Cool_Shit() {
         main_win->Locked(true);
     }
 
-    u32_t start_time = TimeGetMillies();
+    u32_t start_time = util::TimeGetMillies();
     // this will ask for output filename (among other things)
     bool was_ok = game_object->Start(def_filename);
 
@@ -845,7 +845,7 @@ bool Build_Cool_Shit() {
     if (was_ok) {
         Main_ProgStatus(_("Success"));
 
-        u32_t end_time = TimeGetMillies();
+        u32_t end_time = util::TimeGetMillies();
         u32_t total_time = end_time - start_time;
 
         LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
@@ -1020,7 +1020,7 @@ int main(int argc, char **argv) {
     UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
     const char *main_title =
-        StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
+        util::StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
     main_win = new UI_MainWin(main_w, main_h, main_title);
     
     // Set window icon

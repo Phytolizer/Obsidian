@@ -447,15 +447,15 @@ void wolf_game_interface_c::EndLevel() {
     WF_WriteHead();
 
     if (level_name) {
-        StringFree(level_name);
+        util::StringFree(level_name);
         level_name = NULL;
     }
 }
 
 void wolf_game_interface_c::Property(const char *key, const char *value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
-    } else if (StringCaseCmp(key, "file_ext") == 0) {
+    if (util::StringCaseCmp(key, "level_name") == 0) {
+        level_name = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "file_ext") == 0) {
         file_ext = std::string(value);
     } else {
         LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key, value);

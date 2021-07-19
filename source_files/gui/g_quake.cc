@@ -1249,10 +1249,10 @@ int Q1_add_tex_wad(lua_State *L) {
     // TODO: support more than one
 
     if (qk_texture_wad) {
-        StringFree(qk_texture_wad);
+        util::StringFree(qk_texture_wad);
     }
 
-    qk_texture_wad = StringDup(name);
+    qk_texture_wad = util::StringDup(name);
 
     return 1;
 }
@@ -1306,7 +1306,7 @@ bool quake1_game_interface_c::Start(const char *preset) {
     QLIT_InitProperties();
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = util::StringDup(batch_output_file);
     } else {
         filename = DLG_OutputFilename("pak");
     }
@@ -1358,16 +1358,16 @@ void quake1_game_interface_c::BeginLevel() {
 }
 
 void quake1_game_interface_c::Property(const char *key, const char *value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
-    } else if (StringCaseCmp(key, "description") == 0) {
-        description = StringDup(value);
-    } else if (StringCaseCmp(key, "sub_format") == 0) {
-        if (StringCaseCmp(value, "quake") == 0) {
+    if (util::StringCaseCmp(key, "level_name") == 0) {
+        level_name = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "description") == 0) {
+        description = util::StringDup(value);
+    } else if (util::StringCaseCmp(key, "sub_format") == 0) {
+        if (util::StringCaseCmp(value, "quake") == 0) {
             qk_sub_format = 0;
-        } else if (StringCaseCmp(value, "hexen2") == 0) {
+        } else if (util::StringCaseCmp(value, "hexen2") == 0) {
             qk_sub_format = SUBFMT_Hexen2;
-        } else if (StringCaseCmp(value, "halflife") == 0) {
+        } else if (util::StringCaseCmp(value, "halflife") == 0) {
             qk_sub_format = SUBFMT_HalfLife;
         } else {
             LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value);
@@ -1377,7 +1377,7 @@ void quake1_game_interface_c::Property(const char *key, const char *value) {
         if (main_win) {
             main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
         }
-    } else if (StringCaseCmp(key, "worldtype") == 0) {
+    } else if (util::StringCaseCmp(key, "worldtype") == 0) {
         qk_worldtype = atoi(value);
     } else {
         LogPrintf("WARNING: unknown QUAKE1 property: %s=%s\n", key, value);
@@ -1399,14 +1399,14 @@ void quake1_game_interface_c::EndLevel() {
 
     Q1_CreateBSPFile(entry_in_pak);
 
-    StringFree(level_name);
+    util::StringFree(level_name);
 
     if (description) {
-        StringFree(description);
+        util::StringFree(description);
     }
 
     if (qk_texture_wad) {
-        StringFree(qk_texture_wad);
+        util::StringFree(qk_texture_wad);
     }
 }
 

@@ -63,7 +63,7 @@ static void Cookie_SetValue(const char *name, const char *value) {
     }
 
     // need special handling for the 'seed' value
-    if (StringCaseCmp(name, "seed") == 0) {
+    if (util::StringCaseCmp(name, "seed") == 0) {
         // ignore seed when loading a config file
         // unless the -k / --keep option is given.
 
@@ -199,7 +199,7 @@ bool Cookie_LoadString(const char *str, bool _keep_seed) {
     // simple line-by-line parser
     char buffer[MSG_BUF_LEN];
 
-    while (mem_gets(buffer, MSG_BUF_LEN - 2, &str)) {
+    while (util::mem_gets(buffer, MSG_BUF_LEN - 2, &str)) {
         Cookie_ParseLine(buffer);
     }
 
@@ -283,7 +283,7 @@ void Cookie_ParseArguments(void) {
         // split argument into name/value pair
         int eq_offset = (eq_pos - arg);
 
-        char *name = StringDup(arg);
+        char *name = util::StringDup(arg);
         char *value = name + eq_offset + 1;
 
         name[eq_offset] = 0;
@@ -294,7 +294,7 @@ void Cookie_ParseArguments(void) {
 
         Cookie_SetValue(name, value);
 
-        StringFree(name);
+        util::StringFree(name);
     }
 }
 
@@ -322,7 +322,7 @@ class RecentFiles_c {
 
     void clear() {
         for (int k = 0; k < size; k++) {
-            StringFree(filenames[k]);
+            util::StringFree(filenames[k]);
             filenames[k] = NULL;
         }
 
@@ -347,7 +347,7 @@ class RecentFiles_c {
     void erase(int index) {
         SYS_ASSERT(index < size);
 
-        StringFree(filenames[index]);
+        util::StringFree(filenames[index]);
 
         size--;
 
@@ -370,7 +370,7 @@ class RecentFiles_c {
             filenames[k + 1] = filenames[k];
         }
 
-        filenames[0] = StringDup(file);
+        filenames[0] = util::StringDup(file);
 
         size++;
     }
@@ -430,10 +430,10 @@ static RecentFiles_c recent_wads;
 static RecentFiles_c recent_configs;
 
 void Recent_Parse(const char *name, const char *value) {
-    if (StringCaseCmp(name, "recent_wad") == 0) {
+    if (util::StringCaseCmp(name, "recent_wad") == 0) {
         recent_wads.insert(value);
 
-    } else if (StringCaseCmp(name, "recent_config") == 0) {
+    } else if (util::StringCaseCmp(name, "recent_config") == 0) {
         recent_configs.insert(value);
     }
 }

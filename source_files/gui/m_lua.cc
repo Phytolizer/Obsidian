@@ -87,11 +87,11 @@ int gui_format_prefix(lua_State *L) {
 	ff_args[5] = "-t";
 	ff_args[6] = theme;
 	ff_args[7] = "-f";
-	if (StringCaseCmp(format, "version") == 0) {
+	if (util::StringCaseCmp(format, "version") == 0) {
 		std::string tempstring = OBSIDIAN_SHORT_VERSION;
 		tempstring.append("_");
 		ff_args[8] = tempstring.c_str();	
-	} else if (StringCaseCmp(format, "custom") == 0) {
+	} else if (util::StringCaseCmp(format, "custom") == 0) {
 		ff_args[8] = custom_prefix.c_str();
 	} else {
 		ff_args[8] = format;		
@@ -243,10 +243,10 @@ int gui_set_import_dir(lua_State *L) {
     const char *dir_name = luaL_checkstring(L, 1);
 
     if (import_dir) {
-        StringFree(import_dir);
+        util::StringFree(import_dir);
     }
 
-    import_dir = StringDup(dir_name);
+    import_dir = util::StringDup(dir_name);
 
     return 0;
 }
@@ -269,16 +269,16 @@ static bool scan_dir_process_name(const char *name, const char *parent,
     // check if it is a directory
     // [ generally skip directories, unless match is "DIRS" ]
 
-    char *temp_name = StringPrintf("%s/%s", parent, name);
+    char *temp_name = util::StringPrintf("%s/%s", parent, name);
     bool is_it_dir = is_dir(temp_name);
 
     if (strcmp(match, "DIRS") == 0) {
-        StringFree(temp_name);
+        util::StringFree(temp_name);
         return is_it_dir;
     }
 
     if (is_it_dir) {
-        StringFree(temp_name);
+        util::StringFree(temp_name);
         return false;
     }
 
@@ -289,7 +289,7 @@ static bool scan_dir_process_name(const char *name, const char *parent,
 
     PHYSFS_File *fp = PHYSFS_openRead(temp_name);
 
-    StringFree(temp_name);
+    util::StringFree(temp_name);
 
     if (!fp) {
         return false;
@@ -316,7 +316,7 @@ static bool scan_dir_process_name(const char *name, const char *parent,
 
 struct scan_dir_nocase_CMP {
     inline bool operator()(const std::string &A, const std::string &B) const {
-        return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+        return util::StringCaseCmp(A.c_str(), B.c_str()) < 0;
     }
 };
 
@@ -471,9 +471,9 @@ int gui_add_module(lua_State *L) {
 	if (single_pane) {
         main_win->left_mods->AddModule(id, label, tip, red, green, blue);		
 	} else {
-		if (StringCaseCmp(where, "left") == 0) {
+		if (util::StringCaseCmp(where, "left") == 0) {
 		    main_win->left_mods->AddModule(id, label, tip, red, green, blue);
-		} else if (StringCaseCmp(where, "right") == 0) {
+		} else if (util::StringCaseCmp(where, "right") == 0) {
 		    main_win->right_mods->AddModule(id, label, tip, red, green, blue);
 		} else {
 		    return luaL_error(L, "add_module: unknown where value '%s'\n", where);
@@ -697,7 +697,7 @@ int gui_set_module_option(lua_State *L) {
         return 0;
     }
 
-    if (StringCaseCmp(option, "self") == 0) {
+    if (util::StringCaseCmp(option, "self") == 0) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option);
     }
@@ -731,7 +731,7 @@ int gui_set_module_slider_option(lua_State *L) {
         return 0;
     }
 
-    if (StringCaseCmp(option, "self") == 0) {
+    if (util::StringCaseCmp(option, "self") == 0) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option);
     }
@@ -765,7 +765,7 @@ int gui_set_module_button_option(lua_State *L) {
         return 0;
     }
 
-    if (StringCaseCmp(option, "self") == 0) {
+    if (util::StringCaseCmp(option, "self") == 0) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option);
     }
@@ -1326,11 +1326,11 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0,
         }
 
         // this will appear in the log file too
-        main_win->label(StringPrintf("[ ERROR ] %s %s", _(OBSIDIAN_TITLE),
+        main_win->label(util::StringPrintf("[ ERROR ] %s %s", _(OBSIDIAN_TITLE),
                                      OBSIDIAN_VERSION));
         DLG_ShowError(_("Script Error: %s"), err_msg);
         main_win->label(
-            StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+            util::StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
 
         lua_pop(LUA_ST, 2);  // ob_traceback, message
         return false;
@@ -1420,7 +1420,7 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size) {
     // negative result indicates a "complete failure"
     if (len < 0) {
         info->error_msg =
-            StringDup(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+            util::StringDup(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         len = 0;
     }
 
@@ -1479,7 +1479,7 @@ void Script_Load(const char *script_name) {
         script_name = ReplaceExtension(script_name, "lua");
     }
 
-    char *filename = StringPrintf("%s/%s", import_dir, script_name);
+    char *filename = util::StringPrintf("%s/%s", import_dir, script_name);
 
     DebugPrintf("  loading script: '%s'\n", filename);
 
@@ -1495,7 +1495,7 @@ void Script_Load(const char *script_name) {
         Main_FatalError("Unable to load script '%s'\n%s", filename, msg);
     }
 
-    StringFree(filename);
+    util::StringFree(filename);
 }
 
 void Script_Open() {
@@ -1518,7 +1518,7 @@ void Script_Open() {
 
     LogPrintf("Loading main script: oblige.lua\n");
 
-    import_dir = StringDup("scripts");
+    import_dir = util::StringDup("scripts");
 
     Script_Load("oblige.lua");
 
@@ -1618,7 +1618,7 @@ const char *ob_game_format() {
     const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
     if (res) {
-        res = StringDup(res);
+        res = util::StringDup(res);
     }
 
     // remove result from lua stack
@@ -1635,7 +1635,7 @@ const char *ob_default_filename() {
     const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
     if (res) {
-        res = StringDup(res);
+        res = util::StringDup(res);
     }
 
     // remove result from lua stack
@@ -1646,11 +1646,11 @@ const char *ob_default_filename() {
 
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
-        main_win->label(StringPrintf("[ ERROR ] %s %s", _(OBSIDIAN_TITLE),
+        main_win->label(util::StringPrintf("[ ERROR ] %s %s", _(OBSIDIAN_TITLE),
                                      OBSIDIAN_VERSION));
         Main_ProgStatus(_("Script Error"));
         main_win->label(
-            StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+            util::StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
         return false;
     }
 

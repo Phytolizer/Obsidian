@@ -69,13 +69,13 @@ typedef struct {
     }
 
     bool ParseProp(const char *key, const char *value) {
-        if (StringCaseCmp(key, "color") == 0) {
+        if (util::StringCaseCmp(key, "color") == 0) {
             color = QLIT_ParseColorString(value);
             return true;
-        } else if (StringCaseCmp(key, "intensity") == 0) {
+        } else if (util::StringCaseCmp(key, "intensity") == 0) {
             intensity = atof(value);
             return true;
-        } else if (StringCaseCmp(key, "dropoff") == 0) {
+        } else if (util::StringCaseCmp(key, "dropoff") == 0) {
             dropoff = atof(value);
             return true;
         }
@@ -138,35 +138,35 @@ rgb_color_t QLIT_ParseColorString(const char *name) {
 }
 
 bool QLIT_ParseProperty(const char *key, const char *value) {
-    if (StringCaseCmp(key, "q_light_quality") == 0) {
-        if (StringCaseCmp(value, "low") == 0) {
+    if (util::StringCaseCmp(key, "q_light_quality") == 0) {
+        if (util::StringCaseCmp(value, "low") == 0) {
             q_light_quality = -1;
-        } else if (StringCaseCmp(value, "high") == 0) {
+        } else if (util::StringCaseCmp(value, "high") == 0) {
             q_light_quality = +1;
         } else {
             q_light_quality = 0;
         }
 
         return true;
-    } else if (StringCaseCmp(key, "q_light_scale") == 0) {
+    } else if (util::StringCaseCmp(key, "q_light_scale") == 0) {
         q_light_scale = atof(value);
         return true;
-    } else if (StringCaseCmp(key, "q_low_light") == 0) {
+    } else if (util::StringCaseCmp(key, "q_low_light") == 0) {
         q_low_light = atoi(value);
         return true;
-    } else if (StringCaseCmp(key, "q3_luxel_size") == 0)  // Q3 only
+    } else if (util::StringCaseCmp(key, "q3_luxel_size") == 0)  // Q3 only
     {
         q3_luxel_size = atof(value);
         return true;
-    } else if (StringCaseCmp(key, "q3_overbrighting") == 0)  // Q3 only
+    } else if (util::StringCaseCmp(key, "q3_overbrighting") == 0)  // Q3 only
     {
         q3_overbrighting = (atoi(value) > 0);
         return true;
-    } else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
+    } else if (util::StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
     {
         grid_ambient_scale = atof(value);
         return true;
-    } else if (StringCaseCmp(key, "grid_directed_scale") == 0)  // Q3 only
+    } else if (util::StringCaseCmp(key, "grid_directed_scale") == 0)  // Q3 only
     {
         grid_directed_scale = atof(value);
         return true;
@@ -764,7 +764,7 @@ static bool LightPointOffFace(quake_face_c *F, double s, double t, double sx,
         double s2 = V2->x * sx + V2->y * sy + V2->z * sz;
         double t2 = V2->x * tx + V2->y * ty + V2->z * tz;
 
-        double d = PerpDist(s, t, s1, t1, s2, t2);
+        double d = util::PerpDist(s, t, s1, t1, s2, t2);
 
         if (d < epislon) {
             return true;
@@ -1322,7 +1322,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t &light,
                 Bump(s, t, (int)light.level, light.color);
             } else {
                 float dist =
-                    ComputeDist(P.x, P.y, P.z, light.x, light.y, light.z);
+                    util::ComputeDist(P.x, P.y, P.z, light.x, light.y, light.z);
 
                 if (dist < light.radius) {
                     int value = light.level * (1.0 - dist / light.radius);
@@ -1456,7 +1456,7 @@ void QLIT_LightMapModel(quake_mapmodel_c *model)
 		}
 		else
 		{
-			float dist = ComputeDist(mx, my, mz, light.x, light.y, light.z);
+			float dist = util::ComputeDist(mx, my, mz, light.x, light.y, light.z);
 
 			if (dist < light.radius)
 			{
@@ -1532,7 +1532,7 @@ static void Q3_ProcessLightForGrid(quake_light_t &light, float gx, float gy,
                                    float gz, int *r, int *g, int *b) {
     *r = *g = *b = 0;
 
-    float dist = ComputeDist(gx, gy, gz, light.x, light.y, light.z);
+    float dist = util::ComputeDist(gx, gy, gz, light.x, light.y, light.z);
 
     // fast check on distance
     if (light.kind != LTK_Sun && dist >= light.radius) {

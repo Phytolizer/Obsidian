@@ -39,7 +39,7 @@ UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
       label_W(0),
       label_H(0) {
     // copy the URL string
-    url = StringDup(_url);
+    url = util::StringDup(_url);
 
     box(FL_NO_BOX);
 
@@ -47,7 +47,7 @@ UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
     callback(callback_Link, NULL);
 }
 
-UI_HyperLink::~UI_HyperLink() { StringFree(url); }
+UI_HyperLink::~UI_HyperLink() { util::StringFree(url); }
 
 void UI_HyperLink::checkLink() {
     // change the cursor if the mouse is over the link.

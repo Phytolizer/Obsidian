@@ -222,8 +222,8 @@ const char *csg_brush_c::Validate() {
             return "Line loop contains a zero length line!";
         }
 
-        double ang1 = CalcAngle(v2->x, v2->y, v1->x, v1->y);
-        double ang2 = CalcAngle(v2->x, v2->y, v3->x, v3->y);
+        double ang1 = util::CalcAngle(v2->x, v2->y, v1->x, v1->y);
+        double ang2 = util::CalcAngle(v2->x, v2->y, v3->x, v3->y);
 
         double diff = ang1 - ang2;
 
@@ -346,11 +346,11 @@ int csg_brush_c::CalcMedium() const {
         case BKIND_Liquid: {
             const char *str = props.getStr("medium", "");
 
-            if (StringCaseCmp(str, "slime") == 0) {
+            if (util::StringCaseCmp(str, "slime") == 0) {
                 return MEDIUM_SLIME;
             }
 
-            if (StringCaseCmp(str, "lava") == 0) {
+            if (util::StringCaseCmp(str, "lava") == 0) {
                 return MEDIUM_LAVA;
             }
 
@@ -371,7 +371,7 @@ bool csg_brush_c::ContainsPoint(float x, float y, float z) const {
         brush_vert_c *v1 = verts[k];
         brush_vert_c *v2 = verts[(k + 1) % (int)verts.size()];
 
-        double d = PerpDist(x, y, v1->x, v1->y, v2->x, v2->y);
+        double d = util::PerpDist(x, y, v1->x, v1->y, v2->x, v2->y);
 
         if (d > epsilon) {
             return false;
@@ -397,8 +397,8 @@ bool csg_brush_c::IntersectRay(float x1, float y1, float z1, float x2, float y2,
         brush_vert_c *v1 = verts[k];
         brush_vert_c *v2 = verts[(k + 1) % (int)verts.size()];
 
-        double a = PerpDist(x1, y1, v1->x, v1->y, v2->x, v2->y);
-        double b = PerpDist(x2, y2, v1->x, v1->y, v2->x, v2->y);
+        double a = util::PerpDist(x1, y1, v1->x, v1->y, v2->x, v2->y);
+        double b = util::PerpDist(x2, y2, v1->x, v1->y, v2->x, v2->y);
 
         // ray is completely outside the brush?
         if (a > 0 && b > 0) {
@@ -897,25 +897,25 @@ static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind) {
 
     SYS_ASSERT(kind);
 
-    if (StringCaseCmp(kind, "solid") == 0) {
+    if (util::StringCaseCmp(kind, "solid") == 0) {
         B->bkind = BKIND_Solid;
-    } else if (StringCaseCmp(kind, "liquid") == 0) {
+    } else if (util::StringCaseCmp(kind, "liquid") == 0) {
         B->bkind = BKIND_Liquid;
-    } else if (StringCaseCmp(kind, "trigger") == 0) {
+    } else if (util::StringCaseCmp(kind, "trigger") == 0) {
         B->bkind = BKIND_Trigger;
-    } else if (StringCaseCmp(kind, "light") == 0) {
+    } else if (util::StringCaseCmp(kind, "light") == 0) {
         B->bkind = BKIND_Light;
-    } else if (StringCaseCmp(kind, "rail") == 0) {
+    } else if (util::StringCaseCmp(kind, "rail") == 0) {
         B->bkind = BKIND_Rail;
-    } else if (StringCaseCmp(kind, "sky") == 0)  // back compat
+    } else if (util::StringCaseCmp(kind, "sky") == 0)  // back compat
     {
         B->bkind = BKIND_Solid;
         B->bflags |= BFLAG_Sky;
-    } else if (StringCaseCmp(kind, "clip") == 0)  // back compat
+    } else if (util::StringCaseCmp(kind, "clip") == 0)  // back compat
     {
         B->bkind = BKIND_Solid;
         B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
-    } else if (StringCaseCmp(kind, "detail") == 0)  // back compat
+    } else if (util::StringCaseCmp(kind, "detail") == 0)  // back compat
     {
         B->bkind = BKIND_Solid;
         B->bflags |= BFLAG_Detail;
@@ -1099,10 +1099,10 @@ int CSG_property(lua_State *L) {
     } else if (strcmp(key, "spot_high_h") == 0) {
         spot_high_h = atoi(value);
         return 0;
-    } else if (StringCaseCmp(key, "chunk_size") == 0) {
+    } else if (util::StringCaseCmp(key, "chunk_size") == 0) {
         CHUNK_SIZE = atof(value);
         return 0;
-    } else if (StringCaseCmp(key, "cluster_size") == 0) {
+    } else if (util::StringCaseCmp(key, "cluster_size") == 0) {
         CLUSTER_SIZE = atof(value);
         return 0;
     }
@@ -1326,7 +1326,7 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key) {
             continue;
         }
 
-        if (StringCaseCmp(E_key, link_key) == 0) {
+        if (util::StringCaseCmp(E_key, link_key) == 0) {
             B->link_ent = E;
             return;
         }

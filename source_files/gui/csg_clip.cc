@@ -82,7 +82,7 @@ class clip_side_c {
     ~clip_side_c() {}
 
    public:
-    double Length() const { return ComputeDist(x1, y1, x2, y2); }
+    double Length() const { return util::ComputeDist(x1, y1, x2, y2); }
 
     bool TwoSided() const {
         if (!snag->partner) {
@@ -418,7 +418,7 @@ static void CalcNormal(double x1, double y1, double x2, double y2, double *nx,
     *nx = (y2 - y1);
     *ny = (x1 - x2);
 
-    double n_len = ComputeDist(x1, y1, x2, y2);
+    double n_len = util::ComputeDist(x1, y1, x2, y2);
     SYS_ASSERT(n_len > 0.0001);
 
     *nx /= n_len;
@@ -465,7 +465,7 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
     // if the two lines are co-linear (or near enough), then we
     // can skip this vertex altogether.
 
-    if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) <
+    if (fabs(util::PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) <
         4.0 * CLIP_EPSILON) {
         return;
     }
@@ -577,10 +577,10 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
         // Lines must go between diagonally opposite quadrants
         // or one or both of them are purely horizontal or
         // vertical.  A simple intersection is all we need.
-        CalcIntersection(pv->x + pad * p_nx, pv->y + pad * p_ny,
-                         kv->x + pad * p_nx, kv->y + pad * p_ny,
-                         nv->x + pad * n_nx, nv->y + pad * n_ny,
-                         kv->x + pad * n_nx, kv->y + pad * n_ny, &ix, &iy);
+        util::CalcIntersection(
+            pv->x + pad * p_nx, pv->y + pad * p_ny, kv->x + pad * p_nx,
+            kv->y + pad * p_ny, nv->x + pad * n_nx, nv->y + pad * n_ny,
+            kv->x + pad * n_nx, kv->y + pad * n_ny, &ix, &iy);
 
         P2->verts.push_back(new brush_vert_c(P2, ix, iy));
     }
@@ -768,11 +768,11 @@ static void Split_XY(clip_group_c &group, const clip_partition_c *part,
         clip_side_c *S = local_sides[k];
 
         // get relationship of this side to the partition line
-        double a =
-            PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
+        double a = util::PerpDist(S->x1, S->y1, part->x1, part->y1, part->x2,
+                                  part->y2);
 
-        double b =
-            PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
+        double b = util::PerpDist(S->x2, S->y2, part->x1, part->y1, part->x2,
+                                  part->y2);
 
         int a_side = (a < -CLIP_EPSILON) ? -1 : (a > CLIP_EPSILON) ? +1 : 0;
         int b_side = (b < -CLIP_EPSILON) ? -1 : (b > CLIP_EPSILON) ? +1 : 0;
@@ -781,8 +781,8 @@ static void Split_XY(clip_group_c &group, const clip_partition_c *part,
             // side sits on the partition
             S->on_node = true;
 
-            if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
-                              S->x2 - S->x1, S->y2 - S->y1)) {
+            if (util::VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
+                                    S->x2 - S->x1, S->y2 - S->y1)) {
                 front.AddSide(S);
             } else {
                 back.AddSide(S);

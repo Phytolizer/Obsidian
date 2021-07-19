@@ -403,7 +403,7 @@ static const char *remove_codeset(const char *langcode) {
             *p = 0;
         }
 
-        langcode = StringDup(buf);
+        langcode = util::StringDup(buf);
     }
 
     return langcode;
@@ -421,7 +421,7 @@ static const char *remove_territory(const char *langcode) {
             *p = 0;
         }
 
-        langcode = StringDup(buf);
+        langcode = util::StringDup(buf);
     }
 
     return langcode;
@@ -810,8 +810,8 @@ void Trans_ParseLangLine(char *line) {
 
     available_language_t lang;
 
-    lang.langcode = StringDup(line);
-    lang.fullname = StringDup(pos);
+    lang.langcode = util::StringDup(line);
+    lang.fullname = util::StringDup(pos);
 
     // DEBUG
     //  LogPrintf("  '%s' --> '%s'\n", lang.langcode, lang.fullname);
@@ -1043,7 +1043,7 @@ void Trans_Init() {
 
     /* read the list of languages */
 
-    char *path = StringPrintf("%s/language/LANGS.txt", install_dir);
+    char *path = util::StringPrintf("%s/language/LANGS.txt", install_dir);
 
     FILE *fp = fopen(path, "rb");
 
@@ -1087,13 +1087,13 @@ void Trans_SetLanguage() {
     }
 
     // see if the translation file exists
-    char *path = StringPrintf("%s/language/%s.po", install_dir, langcode);
+    char *path = util::StringPrintf("%s/language/%s.po", install_dir, langcode);
 
     if (!FileExists(path)) {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
-        path = StringPrintf("%s/language/%s.po", install_dir, lang_plain);
+        path = util::StringPrintf("%s/language/%s.po", install_dir, lang_plain);
     }
 
     FILE *fp = fopen(path, "rb");
@@ -1149,7 +1149,7 @@ const char *mucked_up_string(const char *s) {
         buffer[q] = ch;
     }
     buffer[q] = 0;
-    return StringDup(buffer);
+    return util::StringDup(buffer);
 }
 
 const char *ob_gettext(const char *s) {

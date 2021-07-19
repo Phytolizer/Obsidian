@@ -118,7 +118,7 @@ char *ReplaceExtension(const char *filename, const char *ext) {
 
     size_t total_len = strlen(filename) + (ext ? strlen(ext) : 0);
 
-    char *buffer = StringNew((int)total_len + 10);
+    char *buffer = util::StringNew((int)total_len + 10);
 
     strcpy(buffer, filename);
 
@@ -391,7 +391,7 @@ bool PathIsDirectory(const char *path) {
 const char *FileFindInPath(const char *paths, const char *base_name) {
     // search through the path list (separated by ';') to find the file.
     // If found, the complete filename is returned (which must be freed
-    // using StringFree).  If not found, NULL is returned.
+    // using util::StringFree).  If not found, NULL is returned.
 
     for (;;) {
         const char *sep = strchr(paths, ';');
@@ -399,7 +399,8 @@ const char *FileFindInPath(const char *paths, const char *base_name) {
 
         SYS_ASSERT(len > 0);
 
-        const char *filename = StringPrintf("%.*s/%s", len, paths, base_name);
+        const char *filename =
+            util::StringPrintf("%.*s/%s", len, paths, base_name);
 
         //  fprintf(stderr, "Trying data file: [%s]\n", filename);
 
@@ -407,7 +408,7 @@ const char *FileFindInPath(const char *paths, const char *base_name) {
             return filename;
         }
 
-        StringFree(filename);
+        util::StringFree(filename);
 
         if (!sep) {
             return NULL;  // not found
@@ -498,17 +499,18 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
             continue;
         }
 
-        const char *full_name = StringPrintf("%s/%s", path, fdata->d_name);
+        const char *full_name =
+            util::StringPrintf("%s/%s", path, fdata->d_name);
 
         struct stat finfo;
 
         if (stat(full_name, &finfo) != 0) {
             DebugPrintf(".... stat failed: %s\n", strerror(errno));
-            StringFree(full_name);
+            util::StringFree(full_name);
             continue;
         }
 
-        StringFree(full_name);
+        util::StringFree(full_name);
 
         int flags = 0;
 
@@ -537,7 +539,7 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
 
 struct filename_nocase_CMP {
     inline bool operator()(const std::string &A, const std::string &B) const {
-        return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+        return util::StringCaseCmp(A.c_str(), B.c_str()) < 0;
     }
 };
 
@@ -611,7 +613,7 @@ const char *GetExecutablePath(const char *argv0) {
     char *path;
 
 #ifdef WIN32
-    path = StringNew(PATH_MAX + 2);
+    path = util::StringNew(PATH_MAX + 2);
 
     int length = GetModuleFileName(GetModuleHandle(NULL), path, PATH_MAX);
 
@@ -624,11 +626,11 @@ const char *GetExecutablePath(const char *argv0) {
     }
 
     // didn't work, free the memory
-    StringFree(path);
+    util::StringFree(path);
 #endif
 
 #ifdef UNIX
-    path = StringNew(PATH_MAX + 2);
+    path = util::StringNew(PATH_MAX + 2);
 
     int length = readlink("/proc/self/exe", path, PATH_MAX);
 
@@ -643,7 +645,7 @@ const char *GetExecutablePath(const char *argv0) {
     }
 
     // didn't work, free the memory
-    StringFree(path);
+    util::StringFree(path);
 #endif
 
 #ifdef __APPLE__
@@ -660,7 +662,7 @@ const char *GetExecutablePath(const char *argv0) {
      */
     uint32_t pathlen = PATH_MAX * 2;
 
-    path = StringNew(pathlen + 2);
+    path = util::StringNew(pathlen + 2);
 
     if (0 == _NSGetExecutablePath(path, &pathlen)) {
         // FIXME: will this be _inside_ the .app folder???
@@ -669,11 +671,11 @@ const char *GetExecutablePath(const char *argv0) {
     }
 
     // didn't work, free the memory
-    StringFree(path);
+    util::StringFree(path);
 #endif
 
     // fallback method: use argv[0]
-    path = StringDup(argv0);
+    path = util::StringDup(argv0);
 
 #ifdef __APPLE__
     // FIXME: check if _inside_ the .app folder

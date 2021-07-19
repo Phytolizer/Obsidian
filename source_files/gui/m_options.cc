@@ -29,26 +29,26 @@
 #include "main.h"
 
 static void Parse_Option(const char *name, const char *value) {
-    if (StringCaseCmpPartial(name, "recent") == 0) {
+    if (util::StringCaseCmpPartial(name, "recent") == 0) {
         Recent_Parse(name, value);
         return;
     }
 
-    if (StringCaseCmp(name, "addon") == 0) {
+    if (util::StringCaseCmp(name, "addon") == 0) {
         VFS_OptParse(value);
-    } else if (StringCaseCmp(name, "language") == 0) {
-        t_language = StringDup(value);       
-    } else if (StringCaseCmp(name, "create_backups") == 0) {
+    } else if (util::StringCaseCmp(name, "language") == 0) {
+        t_language = util::StringDup(value);       
+    } else if (util::StringCaseCmp(name, "create_backups") == 0) {
         create_backups = atoi(value) ? true : false;
-    } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
+    } else if (util::StringCaseCmp(name, "overwrite_warning") == 0) {
         overwrite_warning = atoi(value) ? true : false;
-    } else if (StringCaseCmp(name, "debug_messages") == 0) {
+    } else if (util::StringCaseCmp(name, "debug_messages") == 0) {
         debug_messages = atoi(value) ? true : false;
-    } else if (StringCaseCmp(name, "last_directory") == 0) {
-        last_directory = StringDup(value);
-    } else if (StringCaseCmp(name, "filename_prefix") == 0) {
+    } else if (util::StringCaseCmp(name, "last_directory") == 0) {
+        last_directory = util::StringDup(value);
+    } else if (util::StringCaseCmp(name, "filename_prefix") == 0) {
         filename_prefix = atoi(value);
-    } else if (StringCaseCmp(name, "custom_prefix") == 0) {
+    } else if (util::StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
     } else {
         LogPrintf("Unknown option: '%s'\n", name);
